@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: viaja-ai-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: viaja-ai
+    ports:
+      - "5432:5432"
+    networks:
+      - viaja-ai-network
+
+networks:
+  viaja-ai-network:
+    driver: bridge
