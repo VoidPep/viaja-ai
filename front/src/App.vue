@@ -1,18 +1,23 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Bosta" />
-</template>
+<script setup>
+import MainLayout from "@/MainLayout.vue";
+import { provide, ref } from "vue";
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+const loading = ref(false)
+const setLoading = function (v = null) {
+  if (v) { loading.value = v; return }
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+  loading.value = !loading.value
 }
+
+provide("loading", {
+  loading,
+  setLoading
+})
 </script>
+
+<template>
+  <MainLayout></MainLayout>
+</template>
 
 <style>
 #app {
@@ -21,6 +26,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
