@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiClient = axios.create({
+const http = axios.create({
     baseURL: 'http://127.0.0.1:3000',
     timeout: 10000,
     headers: {
@@ -8,7 +8,7 @@ const apiClient = axios.create({
     },
 });
 
-apiClient.interceptors.request.use(
+http.interceptors.request.use(
     (config) => {
 
         const token = localStorage.getItem('token');
@@ -25,7 +25,7 @@ apiClient.interceptors.request.use(
     }
 );
 
-apiClient.interceptors.response.use(
+http.interceptors.response.use(
     (response) => {
 
         console.log('Response received: ', response);
@@ -50,4 +50,4 @@ apiClient.interceptors.response.use(
     }
 );
 
-export default apiClient;
+export default http;
