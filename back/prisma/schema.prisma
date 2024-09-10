@@ -1,14 +1,16 @@
-datasource viaja-ai-postgres {
-  provider = "postgresql"
-  url      = "postgresql://postgres:postgres@127.0.0.1:5432/viaja-ai"
+datasource viaja-ai-db {
+  provider = "mysql" //ou postgresql
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
+/*
 model User {
   id    Int    @id @default(autoincrement())
   name  String
   email String @unique
 }
+*/
