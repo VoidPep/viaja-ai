@@ -20,7 +20,7 @@ export class UsuarioController {
         return this.userService.findAll();
     }
 
-    @Patch(':id')
+    @Post(':id')
     async updateUser(@Param('id') id: string, @Body() data: any) {
         return this.userService.update(Number(id), data);
     }
