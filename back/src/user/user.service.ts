@@ -3,7 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Usuario } from './entity/user.entity';
 
 @Injectable()
-export class UserService {
+export class UsuarioService {
     repository: Repository<Usuario>;
     constructor(
         @Inject("DATA_SOURCE") private readonly database: DataSource,
