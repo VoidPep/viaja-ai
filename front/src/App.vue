@@ -1,6 +1,7 @@
 <script setup>
 import MainLayout from "@/MainLayout.vue";
 import { provide, ref } from "vue";
+import CadastroUsuario from "@/components/CadastroUsuario.vue";
 
 const loading = ref(false)
 const setLoading = function (v = null) {
@@ -16,7 +17,7 @@ provide("loading", {
 </script>
 
 <template>
-  <MainLayout></MainLayout>
+  <CadastroUsuario></CadastroUsuario>
 </template>
 
 <style>
