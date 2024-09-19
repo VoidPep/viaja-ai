@@ -8,26 +8,26 @@ export class UserController {
 
     @Post()
     async createUser(@Body() data: Prisma.UserCreateInput) {
-        return this.userService.createUser(data);
+        return this.userService.create(data);
     }
 
     @Get(':id')
     async getUser(@Param('id') id: string) {
-        return this.userService.getUser(Number(id));
+        return this.userService.findOne(Number(id));
     }
 
     @Get()
     async getAllUsers() {
-        return this.userService.getAllUsers();
+        return this.userService.findAll();
     }
 
     @Patch(':id')
     async updateUser(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
-        return this.userService.updateUser(Number(id), data);
+        return this.userService.update(Number(id), data);
     }
 
     @Delete(':id')
     async deleteUser(@Param('id') id: string) {
-        return this.userService.deleteUser(Number(id));
+        return this.userService.remove(Number(id));
     }
 }
