@@ -14,24 +14,35 @@ export class UsuarioService {
   }
 
   async findAll(): Promise<Usuario[]> {
-    return await this.repository.find();
+    return await this.repository.find({ select: ["id", "nome", "email", "cpf"] });
   }
 
   async create(usuario: any) {
     if (!usuario.senha)
       return {
+        status: 400,
         message: "Senha é necessária"
       }
 
     usuario.senha = await bcrypt.hash(usuario.senha, saltOrRounds);
+    await this.repository.save(usuario)
 
-    return await this.repository.save(usuario)
+    return {
+      status: 201,
+      message: "Criado com sucesso!"
+    }
   }
 
   async findOne(id: number) {
     const usuario = await this.repository.findOneBy({
-      id: id
+      id: id,
     });
+
+    if (!usuario)
+      return {
+        status: 404,
+        message: "Não encontrado"
+      }
 
     return {
       nome: usuario.nome,
@@ -39,11 +50,16 @@ export class UsuarioService {
     };
   }
   async update(id: number, usuario: any) {
-    if (usuario.senha){
+    if (usuario.senha) {
       usuario.senha = await bcrypt.hash(usuario.senha, saltOrRounds);
     }
 
-    return await this.repository.update({ id }, usuario);
+    var response = await this.repository.update({ id }, usuario);
+    return {
+      status: 201,
+      message: "Criado com sucesso!",
+      data: response
+    }
   }
 
   async remove(id: number) {
