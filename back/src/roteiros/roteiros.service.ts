@@ -1,14 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoteiroDto } from './dto/create-roteiro.dto';
 import { UpdateRoteiroDto } from './dto/update-roteiro.dto';
+import { Roteiro } from './entities/roteiro.entity';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class RoteirosService {
-  repository: Repository<Usuario>;
+  repository: Repository<Roteiro>;
   constructor(
     @Inject("DATA_SOURCE") private readonly database: DataSource,
   ) {
-    this.repository = this.database.getRepository(Usuario);
+    this.repository = this.database.getRepository(Roteiro);
   }
   
   create(createRoteiroDto: CreateRoteiroDto) {
