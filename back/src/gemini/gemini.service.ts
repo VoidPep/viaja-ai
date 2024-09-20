@@ -1,10 +1,8 @@
-import { HttpException, HttpServer, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 @Injectable()
 export class GeminiService {
-    constructor(private readonly httpService: HttpServer) { }
-
     async getResponse(options: any): Promise<any> {
         try {
             const genAI = new GoogleGenerativeAI(process.env.API_KEY);
