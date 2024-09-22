@@ -33,6 +33,7 @@
 
 <style scoped>
 .background {
+  box-sizing: border-box;
   background-image: url("../../public/Images/backgroundCadastro.jpg");
   background-size: cover;
   background-position: center;

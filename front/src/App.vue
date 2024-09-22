@@ -2,6 +2,7 @@
 import MainLayout from "@/MainLayout.vue";
 import { provide, ref } from "vue";
 import CadastroUsuario from "@/components/CadastroUsuario.vue";
+import TelaInicial from "./components/TelaInicial.vue";
 
 const loading = ref(false)
 const setLoading = function (v = null) {
@@ -17,12 +18,21 @@ provide("loading", {
 </script>
 
 <template>
-  <CadastroUsuario></CadastroUsuario>
+  <TelaInicial></TelaInicial>
+  <!-- <CadastroUsuario></CadastroUsuario> -->
 </template>
 
 <style>
+
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
