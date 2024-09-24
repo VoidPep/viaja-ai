@@ -12,9 +12,9 @@
     </div>
     <div class="chat-container">
       <div class="chat-background chatbox-container">
-            <div class="chatbox p-4">
+            <div class="chatbox">
               <div class="chatbox-questions-area">
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -22,7 +22,7 @@
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -30,7 +30,7 @@
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -38,7 +38,7 @@
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -46,7 +46,7 @@
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -54,7 +54,7 @@
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -62,7 +62,7 @@
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
-                <div class="chatbox-question mb-5 p-4">
+                <div class="chatbox-question">
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
@@ -141,6 +141,8 @@
 }
 
 .chatbox {
+    margin: 1rem;
+    padding: 1rem;
     border-radius: 7px;
     width: 60%;
     background-color: #fff;
@@ -152,7 +154,8 @@
 }
 
 .chatbox-question {
-  gap:20px;
+  gap:15px;
+  padding: 2rem;
   display:flex;
   justify-content: start;
   flex-direction: column;
@@ -196,5 +199,35 @@
 .generateTrip-btn-area button:hover { 
   background-color: #6799db;
 }
+
+@media(max-width: 768px) {
+  .chatbox {
+    width: 90%;
+  }
+
+  .chatbox-answer-select  {
+    width: 100%;
+  }
+
+}
+
+@media(max-width: 500px) {
+  .chatbox {
+    width: 95%;
+    padding: 1rem;
+  }
+  .chatbox-question {
+    padding: 1.5rem 1rem;
+  }
+  .chatbox-question-title {
+    font-size: 21px;
+    font-weight: bold;
+  }
+  .generateTrip-btn-area button {
+    padding: 10px 30px;
+    font-size: 18px;
+  }
+}
+
 
 </style>
