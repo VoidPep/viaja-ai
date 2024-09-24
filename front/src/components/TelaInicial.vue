@@ -11,9 +11,69 @@
       </div>
     </div>
     <div class="chat-container">
-      <div class="chat-background chatBox-container">
-            <div class="chatBox p-5">
-                <span class="chatbox-Title flex justify-content-start">Para onde vamos?</span>
+      <div class="chat-background chatbox-container">
+            <div class="chatbox p-4">
+              <div class="chatbox-questions-area">
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+                <div class="chatbox-question mb-5 p-4">
+                  <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
+                  <select class="chatbox-answer-select">
+                    <option disabled selected hidden>Selecione um país</option>
+                    <option>oi</option>
+                    <option>oi</option>
+                  </select>
+                </div><!-- div de pergunta e resposta com select-->
+              </div>
+              <div class="generateTrip-btn-area">
+                <button>Gerar viagem</button>
+              </div>
             </div>
       </div>
     </div>
@@ -74,19 +134,67 @@
     background-position: center;
 }
 
-.chatBox-container {
+.chatbox-container {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.chatBox {
-    width: 50%;
+.chatbox {
+    border-radius: 7px;
+    width: 60%;
     background-color: #fff;
 }
 
-.chatbox-Title {
+.chatbox-questions-area {
+  height: 450px;
+  overflow-y: scroll;
+}
+
+.chatbox-question {
+  gap:20px;
+  display:flex;
+  justify-content: start;
+  flex-direction: column;
+}
+
+.chatbox-answer-select {
+  width: 90%;
+  border: none; 
+  outline: none; 
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 16px; 
+  box-shadow: 2px 2px 6px #b8b8b8
+}
+
+.chatbox-question-title {
     font-size: 28px;
     font-weight: bold;
 }
+
+.generateTrip-btn-area{
+  width: 95%;
+  border-top: 1px solid #ddd;
+  padding: 15px;
+}
+
+.generateTrip-btn-area button {
+  transition: 0.1s all linear;
+  background-color: #4289e8;
+  margin-top: 15px;
+  padding: 15px 40px;
+  font-size: 20px;
+  color: #111;
+  font-weight: 500;
+  border-radius: 6px;
+  border:none;
+}
+
+.generateTrip-btn-area button:hover { 
+  background-color: #6799db;
+}
+
 </style>
