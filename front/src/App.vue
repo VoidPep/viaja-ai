@@ -1,8 +1,5 @@
 <script setup>
-import MainLayout from "@/MainLayout.vue";
-import { provide, ref } from "vue";
-import CadastroUsuario from "@/components/CadastroUsuario.vue";
-import TelaInicial from "./components/TelaInicial.vue";
+import {provide, ref} from "vue";
 
 const loading = ref(false)
 const setLoading = function (v = null) {
@@ -18,15 +15,14 @@ provide("loading", {
 </script>
 
 <template>
-  <TelaInicial></TelaInicial>
-  <!-- <CadastroUsuario></CadastroUsuario> -->
+  <router-view></router-view>
 </template>
 
 <style>
 
 * {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   box-sizing: border-box;
 }
 

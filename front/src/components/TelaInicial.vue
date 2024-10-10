@@ -6,7 +6,7 @@
     <div class="navbar-container">
       <div class="navbar">
         <i class="pi pi-bars menu-icon"></i>
-        <img class="logo" src="../../public/Images/logo-simplificada.png" alt="Logo">
+        <img class="logo" src="../assets/images/logo-simplificada.png" alt="Logo">
         <div class="user-avatar"></div>
       </div>
     </div>
@@ -129,7 +129,7 @@
 .chat-background {
     width: 100%;
     height: 100%;
-    background-image: url("../../public/Images/backgroundTelaInicial.png");
+    background-image: url("../assets/images/backgroundTelaInicial.png");
     background-size: cover;
     background-position: center;
 }
