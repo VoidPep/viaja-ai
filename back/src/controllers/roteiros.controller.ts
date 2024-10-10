@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RoteirosService } from './roteiros.service';
-import { CreateRoteiroDto } from './dto/create-roteiro.dto';
-import { UpdateRoteiroDto } from './dto/update-roteiro.dto';
+import { RoteirosService } from '../services/roteiros.service';
+import { CreateRoteiroDto } from '../modules/roteiros/dto/create-roteiro.dto';
+import { UpdateRoteiroDto } from '../modules/roteiros/dto/update-roteiro.dto';
 
 @Controller('roteiros')
 export class RoteirosController {

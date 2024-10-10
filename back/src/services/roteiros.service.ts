@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateRoteiroDto } from './dto/create-roteiro.dto';
-import { UpdateRoteiroDto } from './dto/update-roteiro.dto';
-import { Roteiro } from './entities/roteiro.entity';
+import { CreateRoteiroDto } from '../modules/roteiros/dto/create-roteiro.dto';
+import { UpdateRoteiroDto } from '../modules/roteiros/dto/update-roteiro.dto';
+import { Roteiro } from '../modules/roteiros/entities/roteiro.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()

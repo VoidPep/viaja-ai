@@ -1,12 +1,12 @@
 import {Module} from '@nestjs/common';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {UsuarioModule} from './user/user.module';
-import {RoteirosModule} from './roteiros/roteiros.module';
-import {GeminiService} from './gemini/gemini.service';
-import {GeminiController} from './gemini/gemini.controller';
-import {GeminiModule} from './gemini/gemini.module';
-import {PerguntasModule} from './perguntas/perguntas.module';
+import {AppController} from './controllers/app.controller';
+import {AppService} from './services/app.service';
+import {UsuarioModule} from './modules/user/user.module';
+import {RoteirosModule} from './modules/roteiros/roteiros.module';
+import {GeminiService} from './services/gemini.service';
+import {GeminiController} from './controllers/gemini.controller';
+import {GeminiModule} from './modules/gemini/gemini.module';
+import {PerguntasModule} from './modules/perguntas/perguntas.module';
 import {ConfigModule} from "@nestjs/config";
 
 @Module({
