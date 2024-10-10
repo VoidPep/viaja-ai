@@ -3,7 +3,7 @@ import {AppController} from './controllers/app.controller';
 import {AppService} from './services/app.service';
 import {UsuarioModule} from './modules/user/user.module';
 import {RoteirosModule} from './modules/roteiros/roteiros.module';
-import {GeminiService} from './services/gemini.service';
+import {GeminiService} from './services/gemini/gemini.service';
 import {GeminiController} from './controllers/gemini.controller';
 import {GeminiModule} from './modules/gemini/gemini.module';
 import {PerguntasModule} from './modules/perguntas/perguntas.module';

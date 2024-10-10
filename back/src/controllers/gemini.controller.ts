@@ -1,5 +1,5 @@
 import {Controller, Post} from '@nestjs/common';
-import {GeminiService} from '../services/gemini.service';
+import {GeminiService} from '../services/gemini/gemini.service';
 import {promptGemini} from "../common/gemini-prompt"
 import {PromptRequest} from "../modules/gemini/gemini.request";
 

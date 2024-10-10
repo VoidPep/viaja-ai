@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Usuario } from '../modules/user/entity/user.entity';
+import { Usuario } from '../../modules/user/entity/user.entity';
 import { saltOrRounds } from 'src/main';
 import * as bcrypt from 'bcrypt';
 
