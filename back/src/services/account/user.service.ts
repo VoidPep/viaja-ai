@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { Usuario } from '../../modules/user/entity/user.entity';
-import { saltOrRounds } from 'src/main';
+import {Inject, Injectable} from '@nestjs/common';
+import {DataSource, Repository} from 'typeorm';
+import {Usuario} from '../../modules/user/entity/user.entity';
+import {saltOrRounds} from 'src/main';
 import * as bcrypt from 'bcrypt';
+import {hash} from "bcrypt";
 
 @Injectable()
 export class UsuarioService {
@@ -24,7 +25,7 @@ export class UsuarioService {
         message: "Senha é necessária"
       }
 
-    usuario.senha = await bcrypt.hash(usuario.senha, saltOrRounds);
+    usuario.senha = await hash(usuario.senha, saltOrRounds);
     await this.repository.save(usuario)
 
     return {
@@ -64,5 +65,11 @@ export class UsuarioService {
 
   async remove(id: number) {
     return await this.repository.delete({ id: id })
+  }
+
+  async findUser(email: string) {
+    return await this.repository.findOneBy({
+      email: email,
+    });
   }
 }

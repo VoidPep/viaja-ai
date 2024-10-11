@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const url = 'http://127.0.0.1:3000'
+//const url = ''
+
 const http = axios.create({
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: url,
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -10,7 +13,6 @@ const http = axios.create({
 
 http.interceptors.request.use(
     (config) => {
-
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -49,5 +51,3 @@ http.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-export default http;
