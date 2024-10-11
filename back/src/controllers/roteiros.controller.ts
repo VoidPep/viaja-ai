@@ -4,7 +4,6 @@ import { CreateRoteiroDto } from '../modules/roteiros/dto/create-roteiro.dto';
 import { UpdateRoteiroDto } from '../modules/roteiros/dto/update-roteiro.dto';
 import {JwtAuthGuard} from "../modules/auth/auth.guard";
 
-@UseGuards(JwtAuthGuard)
 @Controller('roteiros')
 export class RoteirosController {
   constructor(private readonly roteirosService: RoteirosService) {}

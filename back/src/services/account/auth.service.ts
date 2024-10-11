@@ -2,6 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcryptjs';
 import {UsuarioService} from "./user.service";
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +11,7 @@ export class AuthService {
         private jwtService: JwtService
     ) {
     }
+    private readonly jwtSecret = process.env.JWT_SECRET;
 
     async validateUser(email: string, password: string): Promise<any> {
         const user = await this.usersService.findUser(email);
@@ -37,5 +39,16 @@ export class AuthService {
 
     async register(user: any) {
 
+    }
+
+    async verifyJwt(token: string): Promise<boolean> {
+        try {
+            const decoded = jwt.verify(token, this.jwtSecret);
+
+            return true;
+        } catch (error) {
+            console.error('Token inválido:', error);
+            return false;
+        }
     }
 }

@@ -8,7 +8,6 @@ import {JwtAuthGuard} from "../modules/auth/auth.guard";
 export class GeminiController {
   constructor(private readonly geminiService: GeminiService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post('prompt')
   async handlePrompt() {
     const prompt = promptGemini(new PromptRequest())
