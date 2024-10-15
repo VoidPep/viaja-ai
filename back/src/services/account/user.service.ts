@@ -1,9 +1,9 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {DataSource, Repository} from 'typeorm';
-import {Usuario} from '../../modules/user/entity/user.entity';
-import {saltOrRounds} from 'src/main';
+import { Inject, Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { Usuario } from '../../modules/user/entity/user.entity';
+import { saltOrRounds } from 'src/main';
 import * as bcrypt from 'bcrypt';
-import {hash} from "bcrypt";
+import { hash } from "bcrypt";
 
 @Injectable()
 export class UsuarioService {
@@ -23,6 +23,16 @@ export class UsuarioService {
       return {
         status: 400,
         message: "Senha é necessária"
+      }
+
+    const usuarioDoBanco = await this.repository.findOneBy({
+      email: usuario.email
+    })
+
+    if (usuarioDoBanco)
+      return {
+        status: 400,
+        error: "Um usuário com esse email já existe"
       }
 
     usuario.senha = await hash(usuario.senha, saltOrRounds);

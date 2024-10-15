@@ -1,8 +1,7 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
-import {JwtService} from '@nestjs/jwt';
-import {compare} from 'bcryptjs';
-import {UsuarioService} from "./user.service";
-import * as jwt from 'jsonwebtoken';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { compare } from 'bcryptjs';
+import { UsuarioService } from "./user.service";
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -11,44 +10,43 @@ export class AuthService {
         private jwtService: JwtService
     ) {
     }
-    private readonly jwtSecret = process.env.JWT_SECRET;
 
     async validateUser(email: string, password: string): Promise<any> {
         const user = await this.usersService.findUser(email);
         if (user && await compare(password, user.senha)) {
-            const {senha, ...result} = user;
+            const { senha, ...result } = user;
             return result;
         }
         throw new UnauthorizedException('Invalid credentials');
     }
 
     async login(user: any) {
-        const payload = {username: user.email, sub: user.id};
-
-        try {
-            const validUser = await this.validateUser(user.email, user.senha);
-            if (!validUser) return;
-        } catch (e) {
-            throw e;
+        const result = await this.validateUser(user.email, user.senha);
+        
+        const payload = {
+            sub: result.id,
+            username: result.nome
         }
 
         return {
-            access_token: this.jwtService.sign(payload),
+            access_token: await this.jwtService.signAsync(payload),
         };
     }
 
     async register(user: any) {
-
-    }
-
-    async verifyJwt(token: string): Promise<boolean> {
         try {
-            const decoded = jwt.verify(token, this.jwtSecret);
+            const usuario = await this.usersService.create(user);
+            if(usuario.error)
+                return usuario;
 
-            return true;
-        } catch (error) {
-            console.error('Token inválido:', error);
-            return false;
+            const jwt = this.jwtService.sign(usuario);
+            return {
+                access_token: jwt,
+            };
         }
+        catch (error) {
+            return error;
+        }
+
     }
 }
