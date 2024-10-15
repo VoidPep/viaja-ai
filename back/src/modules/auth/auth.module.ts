@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+import { DatabaseModule } from 'src/database/database.module';
 import { AuthController } from "../../controllers/auth.controller";
 import { AuthService } from "../../services/account/auth.service";
 import { UsuarioModule } from "../user/user.module";
-import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Module({
     imports: [
         UsuarioModule,
+        DatabaseModule,
         JwtModule.register({
             global: true,
             secret: process.env.JWT_SECRET,
-            signOptions: { expiresIn: '60s' },
+            signOptions: { expiresIn: '60m' },
           }),
     ],
     providers: [AuthService],
