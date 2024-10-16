@@ -18,7 +18,7 @@
                   <span class="chatbox-question-title flex justify-content-start pl-2">Para onde vamos porra?</span>
                   <select class="chatbox-answer-select">
                     <option disabled selected hidden>Selecione um país</option>
-                    <option>oi</option>
+                    <option>o</option>
                     <option>oi</option>
                   </select>
                 </div><!-- div de pergunta e resposta com select-->
