@@ -2,6 +2,8 @@ import {HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nes
 import {compare} from 'bcryptjs';
 import {JwtService} from "@nestjs/jwt";
 import {UsuarioService} from "./user.service";
+import {UsuarioRequest} from "../../modules/user/dto/usuario.request";
+import {LoginRequest} from "../../modules/user/dto/login.request";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +23,7 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials');
     }
 
-    async login(user: any) {
+    async login(user: LoginRequest) {
         const result = await this.validateUser(user.email, user.senha);
 
         const payload = {
@@ -34,7 +36,7 @@ export class AuthService {
         };
     }
 
-    async register(user: any) {
+    async register(user: UsuarioRequest) {
         const usuarioDoBanco = await this.usersService.findUserByEmail(user.email);
 
         if (usuarioDoBanco)
