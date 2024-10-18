@@ -76,7 +76,7 @@ export class UsuarioService {
     return await this.repository.delete({ id: id })
   }
 
-  async findUser(email: string) {
+  async findUserByEmail(email: string) {
     return await this.repository.findOneBy({
       email: email,
     });
