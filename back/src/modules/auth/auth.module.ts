@@ -4,6 +4,8 @@ import {AuthController} from "../../controllers/auth.controller";
 import {AuthService} from "../../services/account/auth.service";
 import {UsuarioModule} from "../user/user.module";
 import {DatabaseModule} from "../../database/database.module";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
     imports: [
