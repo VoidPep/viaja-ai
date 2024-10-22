@@ -20,3 +20,5 @@ docker-compose exec prisma npx prisma migrate dev --name init
 docker-compose exec prisma npx prisma generate
 Esses comandos aplicam as migrações e geram o cliente Prisma.
   
+   
+     
