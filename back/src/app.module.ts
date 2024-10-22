@@ -16,7 +16,7 @@ import { AuthModule } from './modules/auth/auth.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    AuthModule,
+    AuthModule
   ],
 })
 export class AppModule {}
