@@ -1,24 +1,22 @@
-import {Module} from '@nestjs/common';
-import {AppController} from './app.controller';
-import {AppService} from './app.service';
-import {UsuarioModule} from './user/user.module';
-import {RoteirosModule} from './roteiros/roteiros.module';
-import {GeminiService} from './gemini/gemini.service';
-import {GeminiController} from './gemini/gemini.controller';
-import {GeminiModule} from './gemini/gemini.module';
-import {PerguntasModule} from './perguntas/perguntas.module';
-import {ConfigModule} from "@nestjs/config";
+import { Module } from '@nestjs/common';
+import { UsuarioModule } from './modules/user/user.module';
+import { RoteirosModule } from './modules/roteiros/roteiros.module';
+import { GeminiModule } from './modules/gemini/gemini.module';
+import { PerguntasModule } from './modules/perguntas/perguntas.module';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-    // imports: [UsuarioModule, RoteirosModule, GeminiModule, PerguntasModule],
-    imports: [GeminiModule, PerguntasModule,
-        ConfigModule.forRoot({
-            envFilePath: '.env',
-            isGlobal: true
-        })
-    ],
-    controllers: [AppController, GeminiController],
-    providers: [AppService, GeminiService],
+  imports: [
+    GeminiModule,
+    PerguntasModule,
+    UsuarioModule,
+    RoteirosModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
+    AuthModule
+  ],
 })
-export class AppModule {
-}
+export class AppModule {}

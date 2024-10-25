@@ -35,7 +35,6 @@ const redirectToLogin = function () {
 onMounted(() => {
   showLogin.value = true;
 })
-
 </script>
 
 <template>
@@ -44,7 +43,6 @@ onMounted(() => {
       <div class="col-6 bg-black-alpha-40 card-shadow">
         <div class="h-screen">
           <div class="p-5rem">
-
             <transition name="fade" mode="out-in">
               <div v-if="showLogin" key="login-card">
                 <h1 :style="viajaAiLogo">viaja ai</h1>

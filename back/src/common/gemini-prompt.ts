@@ -1,4 +1,4 @@
-import {PromptRequest} from "../gemini/gemini.request";
+import {PromptRequest} from "../modules/gemini/gemini.request";
 
 const promptGemini = function (request: PromptRequest): string {
     const {

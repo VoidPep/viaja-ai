@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { Usuario } from './entity/user.entity';
-import { saltOrRounds } from 'src/main';
-import * as bcrypt from 'bcrypt';
+import {Inject, Injectable} from '@nestjs/common';
+import {saltOrRounds} from "../../main";
+import {DataSource, Repository} from "typeorm";
+import {Usuario} from "../../modules/user/entity/user.entity";
+import {hash} from "bcrypt";
 
 @Injectable()
 export class UsuarioService {
@@ -24,7 +24,17 @@ export class UsuarioService {
         message: "Senha é necessária"
       }
 
-    usuario.senha = await bcrypt.hash(usuario.senha, saltOrRounds);
+    const usuarioDoBanco = await this.repository.findOneBy({
+      email: usuario.email
+    })
+
+    if (usuarioDoBanco)
+      return {
+        status: 400,
+        error: "Um usuário com esse email já existe"
+      }
+
+    usuario.senha = await hash(usuario.senha, saltOrRounds);
     await this.repository.save(usuario)
 
     return {
@@ -51,7 +61,7 @@ export class UsuarioService {
   }
   async update(id: number, usuario: any) {
     if (usuario.senha) {
-      usuario.senha = await bcrypt.hash(usuario.senha, saltOrRounds);
+      usuario.senha = await hash(usuario.senha, saltOrRounds);
     }
 
     var response = await this.repository.update({ id }, usuario);
@@ -64,5 +74,11 @@ export class UsuarioService {
 
   async remove(id: number) {
     return await this.repository.delete({ id: id })
+  }
+
+  async findUserByEmail(email: string) {
+    return await this.repository.findOneBy({
+      email: email,
+    });
   }
 }
