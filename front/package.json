@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@vue/devtools": "^6.6.3",
+    "axios": "^1.7.7",
     "core-js": "^3.8.3",
     "font-awesome": "^4.7.0",
     "primeflex": "^3.2.1",

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://127.0.0.1:3000'
+const url = 'http://localhost:3000'
 //const url = ''
 
 const http = axios.create({
@@ -17,7 +17,7 @@ http.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-        console.log('Request sent: ', config);
+        // console.log('Request sent: ', config);
         return config;
     },
     (error) => {
@@ -30,7 +30,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
     (response) => {
 
-        console.log('Response received: ', response);
+        // console.log('Response received: ', response);
         return response;
     },
     (error) => {
@@ -51,3 +51,5 @@ http.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export default http;

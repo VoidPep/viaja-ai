@@ -3,8 +3,9 @@ import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
 import Button from "primevue/button";
 
-import {onMounted, ref} from "vue";
-import {useRouter} from "vue-router";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import http from "@/http/http";
 
 const router = useRouter();
 
@@ -17,6 +18,7 @@ const viajaAiLogo = ref({
 
 const showLogin = ref(true);
 const lembrarDeMim = ref(false);
+const login = ref({})
 
 const redirectToRegister = function () {
   showLogin.value = false
@@ -32,7 +34,13 @@ const redirectToLogin = function () {
   showLogin.value = true
 }
 
+const entrar = async function() {
+  const {data, status} = await http.post("auth/login", login.value);
+  console.log(data)
+}
+
 onMounted(() => {
+  login.value = {}
   showLogin.value = true;
 })
 </script>
@@ -46,23 +54,25 @@ onMounted(() => {
             <transition name="fade" mode="out-in">
               <div v-if="showLogin" key="login-card">
                 <h1 :style="viajaAiLogo">viaja ai</h1>
-                <div class="flex flex-column gap-2 mt-8">
-                  <label for="email">Email</label>
-                  <InputText type="email" id="email" class="w-100"></InputText>
-                  <label for="senha">Senha</label>
-                  <InputText type="password" id="senha" class="w-100"></InputText>
+                <form @submit.prevent="entrar" method="post">
+                  <div class="flex flex-column gap-2 mt-8">
+                    <label for="email">Email</label>
+                    <InputText v-model="login.email" type="email" id="email" class="w-100" required></InputText>
+                    <label for="senha">Senha</label>
+                    <InputText v-model="login.senha" type="password" id="senha" class="w-100" required ></InputText>
 
-                  <div class="flex justify-content-between mb-5">
-                    <div class="flex align-items-center">
-                      <Checkbox input-id="lembrarDeMim" v-model="lembrarDeMim" :binary="true"/>
-                      <label for="lembrarDeMim" class="ml-2">Lembrar de mim</label>
+                    <div class="flex justify-content-between mb-5">
+                      <div class="flex align-items-center">
+                        <Checkbox input-id="lembrarDeMim" v-model="lembrarDeMim" :binary="true" />
+                        <label for="lembrarDeMim" class="ml-2">Lembrar de mim</label>
+                      </div>
+                      <div>
+                        <a @click="redirectToRegister()" class="text-white" href="javascript:">Registrar</a>
+                      </div>
                     </div>
-                    <div>
-                      <a @click="redirectToRegister()" class="text-white" href="javascript:">Registrar</a>
-                    </div>
+                    <Button type="submit" label="Login"></Button>
                   </div>
-                  <Button label="Login"></Button>
-                </div>
+                </form>
               </div>
 
               <div v-else key="register-card">
@@ -115,11 +125,13 @@ label {
   font-weight: bold;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.8s ease;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   transition: opacity 0.8s ease;
   opacity: 0;
 }
