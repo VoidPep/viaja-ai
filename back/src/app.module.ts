@@ -5,6 +5,7 @@ import { GeminiModule } from './modules/gemini/gemini.module';
 import { PerguntasModule } from './modules/perguntas/perguntas.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
+import { TesteController } from './controllers/teste.controller';
 
 @Module({
   imports: [
@@ -18,5 +19,6 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     AuthModule
   ],
+  controllers: [TesteController]
 })
 export class AppModule {}
