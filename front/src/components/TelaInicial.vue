@@ -4,6 +4,8 @@ import { onUnmounted, onMounted, ref } from 'vue';
 
 // Estado para armazenar a visibilidade das opções de edição para cada viagem
 const editOptionsVisible = ref({});
+const sidebarVisible = ref(true);
+const userOptionsVisible = ref(false);
 
 // Lista de viagens
 const viagens = ref([
@@ -21,16 +23,37 @@ const viagens = ref([
   { id: 12, destino: 'Panamá', text: 'Cultura e Culinária', dataInicio: '05/03/2025', dataFim: '15/03/2025', fixado: false, dataCriacao: '04/11/2024 - 09:35:00' }
 ]);
 
-function toggleEditOptions(event, id) {
-  event.stopPropagation();
-  hideEditOptions();
-  editOptionsVisible.value[id] = !editOptionsVisible.value[id];
+function ToggleSidebar() {
+  sidebarVisible.value = !sidebarVisible.value;
 }
+
+function toggleUserOption() {
+  event.stopPropagation();
+  if(userOptionsVisible.value){
+    userOptionsVisible.value = !userOptionsVisible.value;
+  }else {
+    hideEditOptions();
+    userOptionsVisible.value = !userOptionsVisible.value;
+  }
+}
+
+function toggleEditOptions(event, id) {
+  event.stopPropagation(); 
+  if (editOptionsVisible.value[id]) {
+    editOptionsVisible.value[id] = false; 
+  } else {
+    hideEditOptions();
+    userOptionsVisible.value = false; 
+    editOptionsVisible.value[id] = true; 
+  }
+}
+
 
 function hideEditOptions() {
   Object.keys(editOptionsVisible.value).forEach(key => {
     editOptionsVisible.value[key] = false;
   });
+  userOptionsVisible.value = false;
 }
 
 onMounted(() => {
@@ -68,45 +91,67 @@ function deletarViagem(id) {
     hideEditOptions();
   }
 }
+
 </script>
 
 <template>
   <div class="background-image h-screen">
     <div class="grid grid-nogutter">
-      <div class="h-screen sidebar-totalArea">
-        <div class="flex justify-content-between">
-          <i class="pi pi-chevron-left icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
-          <i class="pi pi-plus-circle icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
-        </div>
-        <div class="flex flex-column mt-4">
-          <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
-          <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
-            <div class="scrollable-container">
-              <div v-for="viagem in viagens" :key="viagem.id" :class="{'item-fixado': viagem.fixado}" class="item-viagemGerada cursor-pointer flex flex-row justify-content-around align-items-center">
-                <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
-                <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">{{ viagem.text }}</div>
-                <div class="topicos-viagemGerada flex flex-column">
-                  <span>-> {{ viagem.dataInicio }}</span>
-                  <span><- {{ viagem.dataFim }}</span>
-                </div>
-                <div class="itemEdit-area" style="position: relative;">
-                  <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
-                  <div class="edit-options" v-if="editOptionsVisible[viagem.id]">
-                    <span class="flex flex-row" @click="viagem.fixado ? desafixarViagem(viagem.id) : fixarViagem(viagem.id)">
-                      <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar': 'Fixar' }}
-                    </span>
-                    <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
-                      <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Deletar
-                    </span>
+        <div class="h-screen sidebar-totalArea" v-if="sidebarVisible">
+          <div class="flex justify-content-between">
+            <i class="pi pi-arrow-circle-left icones-hover cursor-pointer" @click="ToggleSidebar()" style="font-size: 1.2rem;"></i>
+            <i class="pi pi-plus-circle icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
+          </div>
+          <div class="flex flex-column mt-4">
+            <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
+            <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
+              <div class="scrollable-container">
+                <div v-for="viagem in viagens" :key="viagem.id" :class="{'item-fixado': viagem.fixado}" class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
+                  <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
+                  <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">{{ viagem.text }}</div>
+                  <div class="topicos-viagemGerada flex flex-column">
+                    <span>-> {{ viagem.dataInicio }}</span>
+                    <span><- {{ viagem.dataFim }}</span>
+                  </div>
+                  <div class="itemEdit-area" style="position: relative;">
+                    <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
+                    <div class="options-menu" v-if="editOptionsVisible[viagem.id]">
+                      <span class="flex flex-row" @click="viagem.fixado ? desafixarViagem(viagem.id) : fixarViagem(viagem.id)">
+                        <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar': 'Fixar' }}
+                      </span>
+                      <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
+                        <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Deletar
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="ToggleSidebar()" style="font-size: 1.2rem; position: absolute; left: 1; top: 1; padding: 1.5rem 1rem;"></i>
+      <div class="user-button-area">
+        <div class="user-button" @click="toggleUserOption()"></div>
+        <div v-if="userOptionsVisible" class="options-menu" style="margin-top: 80px; margin-right: 15px; min-width: 200px;">
+          <span class="flex flex-row">
+            <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>Opções
+          </span>
+          <span class="flex flex-row" style="color: var(--red-400)" >
+            <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Aqui
+          </span>
+        </div>
       </div>
-      <div class="chat-totalArea">
-        <div>Teste</div>
+      <div class="h-screen" :class="{ 'chat-totalArea': sidebarVisible }" style="display:flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+        <div class="chat-container">
+          <h1>Como imagina sua próxima viagem?</h1>
+        </div>
+        <div class="chat-input-area">
+          <input 
+            type="text"
+            placeholder="Digite uma mensagem..."
+          >
+          <button><i class="pi pi-arrow-circle-right icones-hover cursor-pointer" style="font-size: 1.2rem;"></i></button>
+        </div>
       </div>
     </div>
   </div>
@@ -156,11 +201,14 @@ function deletarViagem(id) {
 .item-viagemGerada {
   font-size: 1rem;
   gap:3px;
-  background: #dfdfdf;
+  background-color: #dfdfdf;
   margin-bottom: 20px;
   padding: 20px 8px;
   border-radius: 10px;
   transition: 0.1s linear all;
+}
+.item-viagemGerada:hover {
+  background-color: #cacaca;
 }
 
 .item-fixado {
@@ -174,13 +222,16 @@ function deletarViagem(id) {
 }
 
 .btn-edit:hover {
-  background-color: #5272ff91;
+  background-color: #5272ff4d;
 }
 
-.edit-options {
+.options-menu {
+  cursor: default;
   position: absolute;
   display: flex;
   flex-direction: column;
+  align-items: start;
+  justify-content: center;
   gap: 5px;
   z-index: 2;
   padding: 8px;
@@ -189,13 +240,16 @@ function deletarViagem(id) {
   right: 0;
 }
 
-.edit-options span {
-  padding: 10px 20px;
+.options-menu span {
+  cursor:pointer;
+  padding: 10px;
   border-radius: 10px;
+  width: 100%;
+  border-bottom: 1px solid #ddd;
 }
 
-.edit-options span:hover {
-  background-color: #5272ff91;
+.options-menu span:hover {
+  background-color: #5272ff4d;
 }
 
 
@@ -225,8 +279,63 @@ function deletarViagem(id) {
 }
 
 .scrollable-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(82, 113, 255, 0.5); 
+  background: #5272ff4d; 
 }
+
+.chat-totalArea {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-container h1 {
+  color: #e2e2e2;
+  font-size: 36px;
+}
+
+.chat-input-area {
+  width: 100%;
+  display:flex;
+  justify-content: center;
+}
+
+  .chat-input-area input {
+    border-radius: 10px 0px 0px 10px; 
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem;
+    width: 80%;
+    background-color: rgba(236, 236, 236, 0.88);
+    max-width: 650px;
+  }
+    .chat-input-area input::placeholder {
+      font-size: 18px;
+    }
+  .chat-input-area button{
+    border-radius: 0px 10px 10px 0px;
+    padding-right: 10px;
+    background-color: rgba(236, 236, 236, 0.88);
+    border: none;
+    outline: none;
+  }
+    .chat-input-area button:hover {
+      background-color:none;
+    }
+  
+.user-button {
+  cursor: pointer;
+  background-color: #000;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 25px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 1.5rem 1rem;
+}
+
 
 @media(width < 625px) {
   .sidebar-totalArea {
@@ -237,5 +346,9 @@ function deletarViagem(id) {
     width: 100%;
     margin-left: 0px;
   }
+  .scrollable-container {
+    max-height: calc(100vh - 50px);
+  }
 }
+
 </style>
