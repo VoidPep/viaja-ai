@@ -2,6 +2,7 @@
 import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
 import Button from "primevue/button";
+import viajaAiLogoPath from '@/assets/images/logo-simplificada.png';
 
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -10,11 +11,8 @@ import http from "@/http/http";
 const router = useRouter();
 
 const viajaAiLogo = ref({
-  fontFamily: "Montserrat",
-  textWeight: "bold",
-  textSize: "35px",
-  color: "aliceblue"
-})
+  backgroundImage: `url(${viajaAiLogoPath})`
+});
 
 const showLogin = ref(true);
 const lembrarDeMim = ref(false);
@@ -53,7 +51,7 @@ onMounted(() => {
           <div class="p-5rem">
             <transition name="fade" mode="out-in">
               <div v-if="showLogin" key="login-card">
-                <h1 :style="viajaAiLogo">viaja ai</h1>
+                <img :src="viajaAiLogoPath" alt="Logo viaja ai" class="logo" />
                 <form @submit.prevent="entrar" method="post">
                   <div class="flex flex-column gap-2 mt-8">
                     <label for="email">Email</label>
@@ -77,7 +75,7 @@ onMounted(() => {
 
               <div v-else key="register-card">
 
-                <h1 :style="viajaAiLogo">viaja ai</h1>
+                <img :src="viajaAiLogoPath" alt="Logo viaja ai" class="logo" />
 
                 <div class="flex flex-column gap-2 mt-8">
                   <label for="nome">Nome</label>
@@ -104,6 +102,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.logo {
+  width: 130px; 
+  height: auto; 
+}
 .background-image {
   background-image: url("@/assets/images/background-montanha-azul.png");
   min-height: 100vh;
