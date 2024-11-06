@@ -9,18 +9,18 @@ const userOptionsVisible = ref(false);
 
 // Lista de viagens
 const viagens = ref([
-  { id: 1, destino: 'México', text: 'Festas noturnas', dataInicio: '21/10/2024', dataFim: '30/10/2024', fixado: false, dataCriacao: '25/10/2024 - 00:00:00' },
-  { id: 2, destino: 'Brasil', text: 'Gastronomia', dataInicio: '05/11/2024', dataFim: '15/11/2024', fixado: false, dataCriacao: '25/10/2024 - 00:00:00' },
-  { id: 3, destino: 'Argentina', text: 'Montanhas e Trilhas', dataInicio: '10/12/2024', dataFim: '20/12/2024', fixado: false, dataCriacao: '26/10/2024 - 10:30:00' },
-  { id: 4, destino: 'Chile', text: 'Vinícolas e Gastronomia', dataInicio: '15/11/2024', dataFim: '25/11/2024', fixado: false, dataCriacao: '27/10/2024 - 14:00:00' },
-  { id: 5, destino: 'Peru', text: 'História e Cultura', dataInicio: '01/01/2025', dataFim: '10/01/2025', fixado: false, dataCriacao: '28/10/2024 - 09:15:00' },
-  { id: 6, destino: 'Colômbia', text: 'Praias e Vida Noturna', dataInicio: '05/12/2024', dataFim: '15/12/2024', fixado: false, dataCriacao: '29/10/2024 - 12:45:00' },
-  { id: 7, destino: 'Uruguai', text: 'Festivais e Eventos', dataInicio: '20/11/2024', dataFim: '30/11/2024', fixado: false, dataCriacao: '30/10/2024 - 08:20:00' },
-  { id: 8, destino: 'Equador', text: 'Natureza e Vida Selvagem', dataInicio: '18/12/2024', dataFim: '28/12/2024', fixado: false, dataCriacao: '31/10/2024 - 16:10:00' },
-  { id: 9, destino: 'Bolívia', text: 'Aventura e Desafios', dataInicio: '02/02/2025', dataFim: '12/02/2025', fixado: false, dataCriacao: '01/11/2024 - 11:00:00' },
-  { id: 10, destino: 'Paraguai', text: 'Compras e Cultura Local', dataInicio: '15/01/2025', dataFim: '25/01/2025', fixado: false, dataCriacao: '02/11/2024 - 10:10:00' },
-  { id: 11, destino: 'Venezuela', text: 'Paisagens Naturais', dataInicio: '22/11/2024', dataFim: '02/12/2024', fixado: false, dataCriacao: '03/11/2024 - 14:25:00' },
-  { id: 12, destino: 'Panamá', text: 'Cultura e Culinária', dataInicio: '05/03/2025', dataFim: '15/03/2025', fixado: false, dataCriacao: '04/11/2024 - 09:35:00' }
+  { id: 1, destino: 'México', text: 'Festas noturnas', dataInicio: '21/10/24', dataFim: '30/10/24', fixado: false, dataCriacao: '25/10/24 - 00:00:00' },
+  { id: 2, destino: 'Brasil', text: 'Gastronomia', dataInicio: '05/11/24', dataFim: '15/11/24', fixado: false, dataCriacao: '25/10/24 - 00:00:00' },
+  { id: 3, destino: 'Argentina', text: 'Montanhas e Trilhas', dataInicio: '10/12/24', dataFim: '20/12/24', fixado: false, dataCriacao: '26/10/24 - 10:30:00' },
+  { id: 4, destino: 'Chile', text: 'Vinícolas e Gastronomia', dataInicio: '15/11/24', dataFim: '25/11/24', fixado: false, dataCriacao: '27/10/24 - 14:00:00' },
+  { id: 5, destino: 'Peru', text: 'História e Cultura', dataInicio: '01/01/25', dataFim: '10/01/25', fixado: false, dataCriacao: '28/10/24 - 09:15:00' },
+  { id: 6, destino: 'Colômbia', text: 'Praias e Vida Noturna', dataInicio: '05/12/24', dataFim: '15/12/24', fixado: false, dataCriacao: '29/10/24 - 12:45:00' },
+  { id: 7, destino: 'Uruguai', text: 'Festivais e Eventos', dataInicio: '20/11/24', dataFim: '30/11/24', fixado: false, dataCriacao: '30/10/24 - 08:20:00' },
+  { id: 8, destino: 'Equador', text: 'Natureza e Vida Selvagem', dataInicio: '18/12/24', dataFim: '28/12/24', fixado: false, dataCriacao: '31/10/24 - 16:10:00' },
+  { id: 9, destino: 'Bolívia', text: 'Aventura e Desafios', dataInicio: '02/02/25', dataFim: '12/02/25', fixado: false, dataCriacao: '01/11/24 - 11:00:00' },
+  { id: 10, destino: 'Paraguai', text: 'Compras e Cultura Local', dataInicio: '15/01/25', dataFim: '25/01/25', fixado: false, dataCriacao: '02/11/24 - 10:10:00' },
+  { id: 11, destino: 'Venezuela', text: 'Paisagens Naturais', dataInicio: '22/11/24', dataFim: '02/12/24', fixado: false, dataCriacao: '03/11/24 - 14:25:00' },
+  { id: 12, destino: 'Panamá', text: 'Cultura e Culinária', dataInicio: '05/03/25', dataFim: '15/03/25', fixado: false, dataCriacao: '04/11/24 - 09:35:00' }
 ]);
 
 function ToggleSidebar() {
@@ -143,7 +143,7 @@ function deletarViagem(id) {
       </div>
       <div class="h-screen" :class="{ 'chat-totalArea': sidebarVisible }" style="display:flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
         <div class="chat-container">
-          <h1>Como imagina sua próxima viagem?</h1>
+          <h1>Qual seu tipo favorito de rolê?</h1>
         </div>
         <div class="chat-input-area">
           <input 
@@ -151,7 +151,51 @@ function deletarViagem(id) {
             placeholder="Digite uma mensagem..."
           >
           <button><i class="pi pi-arrow-circle-right icones-hover cursor-pointer" style="font-size: 1.2rem;"></i></button>
+        </div><!-- Chat box -->
+        <div class="container">
+          <div v-if="!sidebarVisible" class="w-full flex flex-lg-grid">
+              <div class="chat-card-resposta flex flex-row justify-content-center align-items-center gap-3">
+              <span>Festas noturnas</span>
+              </div>
+              <div class="chat-card-resposta flex flex-row justify-content-center align-items-center gap-3">
+                <span>Festas noturnas</span>
+              </div>
+            
+            
+              <div class="chat-card-resposta w-25 flex flex-row justify-content-center align-items-center gap-3">
+              <span>Festas noturnas</span>
+              </div>
+              <div class="chat-card-resposta w-25 flex flex-row justify-content-center align-items-center gap-3">
+                <span>Festas noturnas</span>
+              </div>
+            
+          </div>
+          <div v-if="sidebarVisible" class="w-full">
+
+            <div class="chat-card-resposta w-25 flex flex-row justify-content-center align-items-center gap-3">
+              <span>Festas noturnas</span>
+              </div>
+              <div class="chat-card-resposta w-25 flex flex-row justify-content-center align-items-center gap-3">
+                <span>Festas noturnas</span>
+              </div>
+            
+            
+              <div class="chat-card-resposta w-25 flex flex-row justify-content-center align-items-center gap-3">
+              <span>Festas noturnas</span>
+              </div>
+              <div class="chat-card-resposta w-25 flex flex-row justify-content-center align-items-center gap-3">
+                <span>Festas noturnas</span>
+              </div>
+            
+
+          </div>
+          <div class="w-full">
+            <div class="chat-card-resposta-semPreferencia">
+              <span>Não tenho preferência</span>
+            </div>
+          </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -296,12 +340,12 @@ function deletarViagem(id) {
 
 .chat-input-area {
   width: 100%;
-  display:flex;
+  display:none;
   justify-content: center;
 }
 
   .chat-input-area input {
-    border-radius: 10px 0px 0px 10px; 
+    border-radius: 20px 0px 0px 20px; 
     border: none;
     outline: none;
     padding: 1rem 1.5rem;
@@ -313,7 +357,7 @@ function deletarViagem(id) {
       font-size: 18px;
     }
   .chat-input-area button{
-    border-radius: 0px 10px 10px 0px;
+    border-radius: 0px 20px 20px 0px;
     padding-right: 10px;
     background-color: rgba(236, 236, 236, 0.88);
     border: none;
@@ -322,6 +366,30 @@ function deletarViagem(id) {
     .chat-input-area button:hover {
       background-color:none;
     }
+
+.chat-card-resposta {
+  cursor: pointer;
+  transition: 0.1s all linear;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height: 10rem;
+  padding: 1rem;
+  background-color: #f2f4f3;
+  border-radius: 10px;
+  box-shadow: 3px 3px 5px #777;
+}
+
+.chat-card-resposta span {
+  text-align: center;
+  font-weight: bold;
+  color: #7b7b7b;
+  font-size: 1.5rem;
+}
+
+.chat-card-resposta:hover {
+  background-color: #dedede;
+}
   
 .user-button {
   cursor: pointer;
