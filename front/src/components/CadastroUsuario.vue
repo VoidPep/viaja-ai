@@ -32,9 +32,26 @@ const redirectToLogin = function () {
   showLogin.value = true
 }
 
-const entrar = async function() {
-  const {data, status} = await http.post("auth/login", login.value);
-  console.log(data)
+const entrar = async function () {
+  const { data, status } = await http.post("auth/login", login.value);
+
+  if (status)
+    return
+
+  if (data.access_token) {
+    localStorage.setItem("user", JSON.stringify({
+      token: data.access_token,
+      email: login.value.email
+    }));
+
+    router.push('/');
+    return;
+  }
+
+  const cadastrar = async function () {
+    const { data, status } = await http.post("auth/login", login.value);
+  }
+
 }
 
 onMounted(() => {
@@ -54,10 +71,12 @@ onMounted(() => {
                 <img :src="viajaAiLogoPath" alt="Logo viaja ai" class="logo" />
                 <form @submit.prevent="entrar" method="post">
                   <div class="flex flex-column gap-2 mt-8">
+
+
                     <label for="email">Email</label>
                     <InputText v-model="login.email" type="email" id="email" class="w-100" required></InputText>
                     <label for="senha">Senha</label>
-                    <InputText v-model="login.senha" type="password" id="senha" class="w-100" required ></InputText>
+                    <InputText v-model="login.senha" type="password" id="senha" class="w-100" required></InputText>
 
                     <div class="flex justify-content-between mb-5">
                       <div class="flex align-items-center">
@@ -97,7 +116,7 @@ onMounted(() => {
       </div>
 
       <div class="col-6">
-        
+
       </div>
     </div>
   </div>
@@ -105,9 +124,10 @@ onMounted(() => {
 
 <style scoped>
 .logo {
-  width: 130px; 
-  height: auto; 
+  width: 130px;
+  height: auto;
 }
+
 .background-image {
   background-image: url("@/assets/images/background-montanha-azul.png");
   min-height: 100vh;
