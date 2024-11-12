@@ -12,7 +12,18 @@ const routes = [
     name: 'login',
     meta: { title: 'Login' },
     component: () => import('@/components/CadastroUsuario.vue')
-  }
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    beforeEnter: async (to, from, next) => {
+        localStorage.removeItem('user');
+
+        next('/login');
+      
+    },
+  },
+
 ]
 
 const router = createRouter({

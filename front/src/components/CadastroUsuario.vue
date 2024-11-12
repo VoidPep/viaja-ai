@@ -1,4 +1,5 @@
 <script setup>
+import { Toast } from 'primevue/toast';
 import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
 import Button from "primevue/button";
@@ -7,6 +8,9 @@ import viajaAiLogoPath from '@/assets/images/logo-simplificada.png';
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import http from "@/http/http";
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const router = useRouter();
 
@@ -17,6 +21,7 @@ const viajaAiLogo = ref({
 const showLogin = ref(true);
 const lembrarDeMim = ref(false);
 const login = ref({})
+const cadastro = ref({})
 
 const redirectToRegister = function () {
   showLogin.value = false
@@ -33,14 +38,21 @@ const redirectToLogin = function () {
 }
 
 const entrar = async function () {
-  const { data, status } = await http.post("auth/login", login.value);
+  const response = await http.post("auth/login", login.value);
 
-  if (status)
+  if (response["status"] >= 400) {
+    toast.add({
+        severity: 'error',
+        summary: 'Erro ao tentar login',
+        detail: 'Usuário ou senha incorreto',
+        life: 3000
+      });
     return
+  }
 
-  if (data.access_token) {
+  if (response.data.access_token) {
     localStorage.setItem("user", JSON.stringify({
-      token: data.access_token,
+      token: response.data.access_token,
       email: login.value.email
     }));
 
@@ -48,8 +60,31 @@ const entrar = async function () {
     return;
   }
 
-  const cadastrar = async function () {
-    const { data, status } = await http.post("auth/login", login.value);
+  
+}
+
+const cadastrar = async function () {
+  const response = await http.post("auth/register", cadastro.value);
+
+  if (response["status"] >= 400) {
+    toast.add({
+        severity: 'error',
+        summary: 'Erro ao cadastrar usuário',
+        detail: response?.data?.message ?? response.response?.data?.message,
+        life: 3000
+      });
+      
+      return;
+    }
+    
+    if (response.data.access_token) {
+      localStorage.setItem("user", JSON.stringify({
+        token: response.data.access_token,
+        email: cadastro.value.email
+      }));
+
+    router.push('/');
+    return;
   }
 
 }
@@ -96,19 +131,24 @@ onMounted(() => {
 
                 <img :src="viajaAiLogoPath" alt="Logo viaja ai" class="logo" />
 
-                <div class="flex flex-column gap-2 mt-8">
-                  <label for="nome">Nome</label>
-                  <InputText type="text" id="nome" class="w-100"></InputText>
-                  <label for="email">Email</label>
-                  <InputText type="email" id="email" class="w-100"></InputText>
-                  <label for="senha">Senha</label>
-                  <InputText type="password" id="senha" class="w-100"></InputText>
+                <form @submit.prevent="cadastrar" method="post">
 
-                  <div class="flex justify-content-between mb-5">
-                    <a @click="redirectToLogin()" class="text-white" href="javascript:">Voltar para Login</a>
+                  <div class="flex flex-column gap-2 mt-8">
+                    <label for="nome">Nome</label>
+                    <InputText type="text" v-model="cadastro.nome" id="nome" class="w-100"></InputText>
+                    <label for="email">Email</label>
+                    <InputText type="email" id="email" v-model="cadastro.email" class="w-100"></InputText>
+                    <label for="senha">Senha</label>
+                    <InputText type="password" id="senha" v-model="cadastro.senha" class="w-100"></InputText>
+                    <label for="confirmar_senha">Confirmar senha</label>
+                    <InputText type="password" id="confirmar_senha" v-model="cadastro.confirmar_senha" class="w-100"></InputText>
+
+                    <div class="flex justify-content-between mb-5">
+                      <a @click="redirectToLogin()" class="text-white" href="javascript:">Voltar para Login</a>
+                    </div>
+                    <Button label="Registrar" type="submit"></Button>
                   </div>
-                  <Button label="Registrar"></Button>
-                </div>
+                </form>
               </div>
             </transition>
           </div>
@@ -120,6 +160,8 @@ onMounted(() => {
       </div>
     </div>
   </div>
+
+  <Toast position="bottom-center"></Toast>
 </template>
 
 <style scoped>
