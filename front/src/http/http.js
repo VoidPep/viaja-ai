@@ -37,18 +37,18 @@ http.interceptors.response.use(
 
         if (error.response) {
 
-            console.error('Response error: ', error.response.data);
             if (error.response.status === 401) {
 
             }
         } else if (error.request) {
 
-            console.error('No response received: ', error.request);
         } else {
 
-            console.error('Request setup error: ', error.message);
         }
-        return Promise.reject(error);
+
+        console.error(error)
+
+        return error;
     }
 );
 

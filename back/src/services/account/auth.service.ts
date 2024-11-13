@@ -4,6 +4,7 @@ import {JwtService} from "@nestjs/jwt";
 import {UsuarioService} from "./user.service";
 import {UsuarioRequest} from "../../modules/user/dto/usuario.request";
 import {LoginRequest} from "../../modules/user/dto/login.request";
+import { stat } from 'fs';
 
 @Injectable()
 export class AuthService {
@@ -42,10 +43,16 @@ export class AuthService {
         if (usuarioDoBanco)
             throw new HttpException('O e-mail já está cadastrado', HttpStatus.BAD_REQUEST);
 
-        const jwt = this.jwtService.sign(user);
+        try{
+            const {status} = await this.usersService.create(user);
+                
+            const jwt = this.jwtService.sign(user);
 
-        return {
-            access_token: jwt,
-        };
+            return {
+                access_token: jwt,
+            };
+        }catch(e) {
+            throw new HttpException(e, HttpStatus.BAD_REQUEST);
+        }
     }
 }
