@@ -1,23 +1,19 @@
 <script setup>
-import { onUnmounted, onMounted, ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import Button from 'primevue/button';
-
 
 const editOptionsVisible = ref({});
 const sidebarVisible = ref(true);
 const userOptionsVisible = ref(false);
 const isMobile = ref(window.innerWidth < 700);
 
-//Valores slider
 const sliderValue = ref(50);
-const min = 0;              
-const max = 100;             
+const min = 0;
+const max = 100;
 
-// Lista de viagens
 const viagens = ref([
   { id: 1, destino: 'México', text: 'Festas noturnas', dataInicio: '21/10/24', dataFim: '30/10/24', fixado: false, dataCriacao: '25/10/24 - 00:00:00' },
   { id: 2, destino: 'Brasil', text: 'Gastronomia', dataInicio: '05/11/24', dataFim: '15/11/24', fixado: false, dataCriacao: '25/10/24 - 00:00:00' },
-  // ... demais itens omitidos para clareza
 ]);
 
 const perguntas = ref([
@@ -138,87 +134,21 @@ function deletarViagem(id) {
 <template>
   <div class="background-image h-screen">
     <div class="grid grid-nogutter">
-        <div class="h-screen sidebar-totalArea" v-if="sidebarVisible">
-          <div class="flex justify-content-between">
-            <i class="pi pi-arrow-circle-left icones-hover cursor-pointer" @click="toggleSidebar()" style="font-size: 1.2rem;"></i>
-            <i class="pi pi-plus-circle icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
-          </div>
-          <div class="flex flex-column mt-4">
-            <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
-            <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
-              <div class="scrollable-container">
-                <div v-for="viagem in viagens" :key="viagem.id" :class="{'item-fixado': viagem.fixado}" class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
-                  <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
-                  <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">{{ viagem.text }}</div>
-                  <div class="topicos-viagemGerada flex flex-column">
-                    <span>-> {{ viagem.dataInicio }}</span>
-                    <span><- {{ viagem.dataFim }}</span>
-                  </div>
-                  <div class="itemEdit-area" style="position: relative;">
-                    <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
-                    <div class="options-menu" v-if="editOptionsVisible[viagem.id]">
-                      <span class="flex flex-row" @click="viagem.fixado ? desafixarViagem(viagem.id) : fixarViagem(viagem.id)">
-                        <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar': 'Fixar' }}
-                      </span>
-                      <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
-                        <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Deletar
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="toggleSidebar()" style="font-size: 1.2rem; position: absolute; left: 1; top: 1; padding: 1.5rem 1rem;"></i>
-      <div class="user-button-area">
-        <div class="user-button" @click="toggleUserOption($event)"></div>
-        <div v-if="userOptionsVisible" class="options-menu" style="margin-top: 80px; margin-right: 15px; min-width: 200px;">
-          <span class="flex flex-row">
-            <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>Opções
-          </span>
-          <span class="flex flex-row" style="color: var(--red-400)" >
-            <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Aqui
-          </span>
-        </div>
+      <div class="h-screen sidebar-totalArea" v-if="sidebarVisible">
+        <!-- Sidebar content -->
       </div>
       <div class="h-screen" :class="{ 'chat-totalArea': sidebarVisible }" style="display:flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
-        
-        <div class="chat-input-area">
-          <input 
-            type="text"
-            placeholder="Digite uma mensagem..."
-          >
-          <button><i class="pi pi-arrow-circle-right icones-hover cursor-pointer" style="font-size: 1.2rem;"></i></button>
-        </div><!-- Chat box -->
-
-        <div class="chat-container mb-3">
-          <h1><!--Perguntas aqui--></h1>
-        </div>
-
         <div class="chat-container mb-3">
           <h1>{{ perguntas[currentQuestionIndex].texto }}</h1>
         </div>
         <div class="chat-card-resposta" v-for="resposta in perguntas[currentQuestionIndex].respostas" :key="resposta.value">
           <span :class="{ 'selected-answer': selectedAnswer === resposta.value }" @click="selectAnswer(resposta.value)" style="cursor: pointer;">{{ resposta.label }}</span>
         </div>
-        <div class="w-full justify-content-center mt-3">
+        <div class="w-full flex justify-content-center mt-3">
           <Button @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn" variant="text" raised class="mr-5" />
           <Button label="Não tenho preferência" severity="secondary" raised />
           <Button @click="goToNextQuestion" :disabled="currentQuestionIndex === perguntas.length - 1" label="Próximo" severity="warn" variant="text" raised class="ml-5" />
         </div>
-
-        <div class="slider-container mt-5">
-          <div class="slider-value">{{ sliderValue }}</div>
-          <input
-            type="range"
-            v-model="sliderValue"
-            :min="min"
-            :max="max"
-            class="slider"
-          />
-        </div>
-        
       </div>
     </div>
   </div>
@@ -228,6 +158,8 @@ function deletarViagem(id) {
 
 .selected-answer {
   background-color: #d0e8ff;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 
 .background-image {
