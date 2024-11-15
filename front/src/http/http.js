@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:3000'
+const url = 'https://viajaai-back-5530b7a7aa90.herokuapp.com'
 //const url = ''
 
 const http = axios.create({
