@@ -22,6 +22,6 @@ Esses comandos aplicam as migrações e geram o cliente Prisma.
   
 Comando para deploy
 ```bash
-git push heroku-front `git subtree split --prefix front master`:refs/heads/master --force
-git push heroku-back `git subtree split --prefix back master`:refs/heads/master --force
+git push heroku-front `git subtree split --prefix front staging`:refs/heads/master --force
+git push heroku-back `git subtree split --prefix back staging`:refs/heads/master --force
 ```

@@ -1,2 +1,2 @@
-release: npm run typeorm:migration:run
+release: npm run migration:run
 web: npm run start
