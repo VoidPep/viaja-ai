@@ -9,7 +9,9 @@ async function bootstrap() {
   const port = process.env.PORT || 3000;  // Heroku define automaticamente o PORT
   const host = '0.0.0.0';
 
-  app.enableCors();
+  app.enableCors({
+    origin: "https://viajaai-front-4c776f66d3e4.herokuapp.com/"
+  });
 
   await app.listen(port, host, () => {
   });
