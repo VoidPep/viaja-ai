@@ -12,6 +12,11 @@ export default new DataSource({
     ],
     synchronize: true,
     migrations: [
-      __dirname + '/../migrations/*{.ts,.js}'  // Diretório onde ficam as migrações
-  ],
-  })
+        __dirname + '/../migrations/*{.ts,.js}'
+    ],
+    extra: {
+        ssl: {
+            rejectUnauthorized: false, // Para permitir conexões com SSL sem verificar o certificado
+        },
+    },
+})
