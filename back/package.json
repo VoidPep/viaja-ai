@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.19.0",
+    "@nestjs/cli": "^10.4.5",
     "@nestjs/axios": "^3.0.3",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
