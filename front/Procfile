@@ -1,2 +1,1 @@
-release: npm run typeorm:migration:run
 web: npm run build && npx serve -s dist
