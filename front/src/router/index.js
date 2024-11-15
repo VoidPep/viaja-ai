@@ -31,13 +31,13 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const user = localStorage.getItem("user");
+// router.beforeEach((to, from, next) => {
+//   const user = localStorage.getItem("user");
 
-  if (!user && to.path != '/login')
-    next('/login')
+//   if (!user && to.path != '/login')
+//     next('/login')
 
-  next();
-})
+//   next();
+// })
 
 export default router
