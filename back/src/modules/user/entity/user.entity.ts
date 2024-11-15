@@ -16,9 +16,6 @@ export class Usuario {
   email: string;
 
   @Column()
-  cpf: string;
-
-  @Column()
   administrador: boolean;
 
   @ManyToOne(() => Plano, (plano) => plano.usuarios)
