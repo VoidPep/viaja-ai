@@ -15,7 +15,10 @@
     "primeicons": "^7.0.0",
     "primevue": "^3.32.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
