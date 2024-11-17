@@ -18,7 +18,7 @@ export class Usuario {
   @Column()
   administrador: boolean;
 
-  @ManyToOne(() => Plano, (plano) => plano.usuarios)
+  @ManyToOne(() => Plano, (plano) => plano.usuarios, { nullable: true })
   @JoinColumn({ name: 'idPlano' })
   plano: Plano;
 }
