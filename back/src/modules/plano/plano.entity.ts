@@ -12,6 +12,6 @@ export class Plano {
   @Column()
   valor: number;
 
-  @OneToMany(() => Usuario, (usuario) => usuario.plano)
+  @OneToMany(() => Usuario, (usuario) => usuario.plano, { nullable: true })
   usuarios: Usuario[];
 }
