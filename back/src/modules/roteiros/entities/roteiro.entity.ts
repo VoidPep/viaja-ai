@@ -1,19 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { Usuario } from "src/modules/user/entity/user.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from "typeorm";
+import { Usuario } from '../../user/entity/user.entity';
+
 @Entity()
 export class Roteiro {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Usuario)
-    usuario: Usuario;
-
     @Column()
     destino: string;
 
     @Column()
-    DataInicio: Date;
+    dataInicio: Date;
 
     @Column()
-    DataFim: Date;
+    dataFim: Date;
+    
+    @Column()
+    custo_total_estimado: number;
+
+    @ManyToOne(() => Usuario, (usuario) => usuario.roteiros, { nullable: true })
+    @JoinColumn({ name: 'idUsuario' })
+    usuario: Usuario;
 }

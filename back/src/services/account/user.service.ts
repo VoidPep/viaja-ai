@@ -1,8 +1,8 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {saltOrRounds} from "../../main";
-import {DataSource, Repository} from "typeorm";
-import {Usuario} from "../../modules/user/entity/user.entity";
-import {hash} from "bcrypt";
+import { Inject, Injectable } from '@nestjs/common';
+import { saltOrRounds } from "../../main";
+import { DataSource, Repository } from "typeorm";
+import { Usuario } from "../../modules/user/entity/user.entity";
+import { hash } from "bcrypt";
 
 @Injectable()
 export class UsuarioService {
@@ -14,7 +14,7 @@ export class UsuarioService {
   }
 
   async findAll(): Promise<Usuario[]> {
-    return await this.repository.find({ select: ["id", "nome", "email", "cpf"] });
+    return await this.repository.find({ select: ["id", "nome", "email"] });
   }
 
   async create(usuario: any) {
@@ -35,6 +35,10 @@ export class UsuarioService {
       }
 
     usuario.senha = await hash(usuario.senha, saltOrRounds);
+
+    if (!usuario.administrador)
+      usuario.administrador = false;
+    
     await this.repository.save(usuario)
 
     return {

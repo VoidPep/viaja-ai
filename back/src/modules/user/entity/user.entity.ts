@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Plano } from '../../plano/plano.entity';
+import { Roteiro } from 'src/modules/roteiros/entities/roteiro.entity';
 
 @Entity()
 export class Usuario {
@@ -15,8 +17,12 @@ export class Usuario {
   email: string;
 
   @Column()
-  cpf: string;
-
-  @Column()
   administrador: boolean;
+
+  @ManyToOne(() => Plano, (plano) => plano.usuarios, { nullable: true })
+  @JoinColumn({ name: 'idPlano' })
+  plano: Plano;
+
+  @OneToMany(() => Plano, (plano) => plano.usuarios, { nullable: true })
+  roteiros: Roteiro[];
 }

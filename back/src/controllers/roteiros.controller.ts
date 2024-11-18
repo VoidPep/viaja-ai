@@ -2,6 +2,7 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nes
 import { RoteirosService } from '../services/roteiros/roteiros.service';
 import { CreateRoteiroDto } from '../modules/roteiros/dto/create-roteiro.dto';
 import { UpdateRoteiroDto } from '../modules/roteiros/dto/update-roteiro.dto';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
 
 @Controller('roteiros')
 export class RoteirosController {
@@ -30,5 +31,10 @@ export class RoteirosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.roteirosService.remove(+id);
+  }
+  @UseGuards(AuthGuard)
+  @Get("getByLoggedUser")
+  getByLoggedUser() {
+    // return this.roteirosService.getByLoggedUser();
   }
 }
