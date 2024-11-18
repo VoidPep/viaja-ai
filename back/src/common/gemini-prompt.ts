@@ -1,15 +1,15 @@
-import {PromptRequest} from "../modules/gemini/gemini.request";
+import { PromptRequest } from "../modules/gemini/gemini.request";
 
 const promptGemini = function (request: PromptRequest): string {
-    const {
-        destinos_preferidos,
-        mes_viagem,
-        atividades,
-        preferencias_acomodacao,
-        orcamento,
-    } = {...request};
+  const {
+    destinos_preferidos,
+    mes_viagem,
+    atividades,
+    preferencias_acomodacao,
+    orcamento,
+  } = { ...request };
 
-    return `
+  return `
         Eu gostaria de planejar uma viagem para ${destinos_preferidos} no período de ${mes_viagem}. Prefiro destinos com
         ${atividades}, ${preferencias_acomodacao}.
         Tenho um orçamento de até ${orcamento}.
@@ -19,23 +19,19 @@ const promptGemini = function (request: PromptRequest): string {
         Envie as informações em um json com este seguinte formato:
         {
           "destino": {
-            "países_sugeridos": ["", ""],
-            "cidades_sugeridas": ["", ""]
+            "cidade": "",
+            "pais": ""
           },
-          "detalhes_viagem": {
-            "data_inicio": "",
-            "data_fim": "",
-            "total_dias":
-          },
+          "data_inicio": "",
+          "data_fim": "",
+          "total_dias":
           "atividades_recomendadas": [
             {
-              "cidade": "",
               "atividade": "",
               "custo_estimado": ,
               "descrição": ""
             },
             {
-              "cidade": "",
               "atividade": "",
               "custo_estimado": ,
               "descrição": ""
@@ -47,14 +43,16 @@ const promptGemini = function (request: PromptRequest): string {
               "hotel": "",
               "estrelas": ,
               "noites": ,
+              "custo_por_noite": 
               "custo_total":
-            },
-            {
-              "cidade": "",
-              "hotel": "",
-              "estrelas": ,
-              "noites": ,
-              "custo_total":
+              },
+              {
+                "cidade": "",
+                "hotel": "",
+                "estrelas": ,
+                "noites": ,
+                "custo_por_noite": 
+                "custo_total":
             }
           ],
           "passagens_aereas": {
@@ -74,4 +72,4 @@ const promptGemini = function (request: PromptRequest): string {
         `
 }
 
-export {promptGemini}
+export { promptGemini }
