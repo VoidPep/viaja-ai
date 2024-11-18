@@ -1,20 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { PythonShell } from 'python-shell';
+import { Injectable, Logger } from '@nestjs/common';
 import * as path from 'path';
+import { PythonShell } from 'python-shell';
 
 @Injectable()
 export class TripPlannerService {
     async runTripPlanner(origin: string, dateRange: string, interests: string): Promise<any> {
-        return new Promise((resolve, reject) => {
+        const currentDir = __dirname;
 
-            const scriptPath = path.join(__dirname, '../../../crewai');
-            console.log(scriptPath)
-            PythonShell.run('main.py', {
-                mode: 'text',
-                pythonOptions: ['-u'],
-                scriptPath: scriptPath,
-                args: [origin, dateRange, interests], // Argumentos passados ao script
-            });
+        const pythonScriptPath = path.resolve(currentDir, '../../../crewai/main.py');
+
+        Logger.log(pythonScriptPath)
+        const resposta = await PythonShell.run(pythonScriptPath, {
+            mode: 'text',
+            pythonOptions: ['-u'],
+            args: [origin, dateRange, interests],
         });
+        return resposta;
     }
 }

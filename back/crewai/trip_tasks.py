@@ -4,7 +4,7 @@ from datetime import date
 
 class TripTasks:
 
-    def identify_task(self, agent, origin, cities, interests, range):
+    def identify_task(self, agent, origin, interests, range):
         return Task(
             description=dedent(f"""
                 Analyze and select the best city for the trip based 
@@ -21,7 +21,6 @@ class TripTasks:
                 {self.__tip_section()}
 
                 Traveling from: {origin}
-                City Options: {cities}
                 Trip Date: {range}
                 Traveler Interests: {interests}
             """),
