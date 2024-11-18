@@ -5,6 +5,7 @@ import { GeminiModule } from './modules/gemini/gemini.module';
 import { PerguntasModule } from './modules/perguntas/perguntas.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
+import { TripPlannerModule } from './modules/trip-planner/trip-planner.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AuthModule } from './modules/auth/auth.module';
     PerguntasModule,
     UsuarioModule,
     RoteirosModule,
+    TripPlannerModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
