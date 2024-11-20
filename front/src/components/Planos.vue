@@ -4,48 +4,30 @@
     <div class="flex grid justify-content-center align-content-center">
       <div class="plan-card mx-4">
         <div class="plan-header">
-          <h2>Free</h2>
-          <p class="price">FREE</p>
+          <h2>Gratuito</h2>
+          <p class="price">0,00 R$</p>
         </div>
-        <p>Forever free for individuals and small teams up to 3</p>
+        <p>Plano gratuito para usuários casuais</p>
         <ul>
-          <li>Unlimited Access</li>
-          <li>100MB Storage</li>
-          <li>3 Users</li>
-          <li>Unlimited Tasks</li>
+          <li>Limite de viagens geradas</li>
+          <li>Visualização das últimas viagens geradas1</li>
         </ul>
-        <Button label="Start for Free" class="p-button-outlined p-button-rounded plan-btn" @click="irParaTelaInicial"/>
+        <Button label="Continuar com gratuito" class="p-button-outlined p-button-rounded plan-btn" @click="irParaTelaInicial"/>
       </div>
 
       <div class="plan-card featured mx-4">
         <div class="plan-header">
-          <h2>Unlimited</h2>
-          <p class="price">$29</p>
-          <span class="badge">#bestdeal</span>
+          <h2>ilimitado</h2>
+          <p class="price">5,00 R$</p>
+          <span class="badge">#Recomendado</span>
         </div>
-        <p>per user/month billed yearly<br />$39 billed monthly</p>
+        <p>Para aqueles que realmente gostam de viajar</p>
         <ul>
-          <li>All in Free +</li>
-          <li>Unlimited Guests</li>
-          <li>Priority Support</li>
-          <li>Smart Notifications</li>
+          <li>Tudo dentro do plano gratuito</li>
+          <li>Número ilimitado de gerações</li>
+          <li>Pesquisa mais eficáz</li>
         </ul>
-        <Button label="Get Unlimited" class="p-button-outlined p-button-rounded plan-btn" />
-      </div>
-
-      <div class="plan-card mx-4">
-        <div class="plan-header">
-          <h2>Enterprise</h2>
-          <p class="price">$35</p>
-        </div>
-        <p>per user/month billed yearly<br />$45 billed monthly</p>
-        <ul>
-          <li>All in Unlimited +</li>
-          <li>Bulk Export</li>
-          <li>Advanced Analytics</li>
-          <li>Advanced Security</li>
-        </ul>
-        <Button label="Get Enterprise" class="p-button-outlined p-button-rounded plan-btn" />
+        <Button label="Continuar com ilimitado" class="p-button-outlined p-button-rounded plan-btn" />
       </div>
     </div>
   </div>

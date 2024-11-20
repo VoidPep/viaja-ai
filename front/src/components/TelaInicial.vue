@@ -101,12 +101,16 @@ function selectAnswer(answer, index) {
 }
 
 async function goToNextQuestion() {
+const usuario = localStorage.getItem('user')
+const idUsuario = usuario.id
+
 if(currentQuestionIndex.value === perguntas.value.length - 1) {
   const form = {
     data_inicial: dataInicial.value.toISOString(),
     data_final: dataFinal.value.toISOString(),
     orcamento: rangeValue.value,
-    preferencias: selectedAnswer.value
+    preferencias: selectedAnswer.value,
+    idUsuario: idUsuario
   }
   
   const response = await http.post('roteiros/gerar-viagem', form)

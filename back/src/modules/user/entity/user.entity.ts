@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { Plano } from '../../plano/plano.entity';
-import { Roteiro } from 'src/modules/roteiros/entities/roteiro.entity';
+import { Roteiro } from '../../roteiros/entity/roteiro.entity';
 
 @Entity()
 export class Usuario {
@@ -23,6 +23,6 @@ export class Usuario {
   @JoinColumn({ name: 'idPlano' })
   plano: Plano;
 
-  @OneToMany(() => Plano, (plano) => plano.usuarios, { nullable: true })
+  @OneToMany(() => Roteiro, (roteiro) => roteiro.usuario, { nullable: true })
   roteiros: Roteiro[];
 }

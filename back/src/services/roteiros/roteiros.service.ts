@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoteiroDto } from '../../modules/roteiros/dto/create-roteiro.dto';
-import { Roteiro } from '../../modules/roteiros/entities/roteiro.entity';
+import { Roteiro } from '../../modules/roteiros/entity/roteiro.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
@@ -12,8 +12,8 @@ export class RoteirosService {
     this.repository = this.database.getRepository(Roteiro);
   }
   
-  create(createRoteiroDto: CreateRoteiroDto) {
-    return 'This action adds a new roteiro';
+  async create(roteiro: any) {
+    return await this.repository.save(roteiro)
   }
 
   findAll() {

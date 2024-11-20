@@ -18,10 +18,10 @@ export class Roteiro {
     @Column()
     custo_total_estimado: number;
 
-    @Column()
+    @Column("text")
     json: string;
 
-    @ManyToOne(() => Usuario, (usuario) => usuario.roteiros, { nullable: true })
+    @ManyToOne(() => Usuario, usuario => usuario.roteiros)
     @JoinColumn({ name: 'idUsuario' })
     usuario: Usuario;
 }
