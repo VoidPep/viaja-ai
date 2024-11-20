@@ -1,6 +1,7 @@
 <script setup>
 import { onUnmounted, onMounted, ref } from 'vue';
 import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
 
 
 const editOptionsVisible = ref({});
@@ -11,7 +12,14 @@ const isMobile = ref(window.innerWidth < 700);
 //Valores slider
 const sliderValue = ref(50);
 const min = 0;              
-const max = 100;             
+const max = 100;
+
+
+const showDialog = ref(false);
+const confirmAction = () => {
+  console.log('Ação confirmada');
+  showDialog.value = false;
+};
 
 // Lista de viagens
 const viagens = ref([
@@ -151,8 +159,8 @@ function deletarViagem(id) {
                   <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
                   <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">{{ viagem.text }}</div>
                   <div class="topicos-viagemGerada flex flex-column">
-                    <span>-> {{ viagem.dataInicio }}</span>
-                    <span><- {{ viagem.dataFim }}</span>
+                    <span> {{ viagem.dataInicio }}</span>
+                    <span> {{ viagem.dataFim }}</span>
                   </div>
                   <div class="itemEdit-area" style="position: relative;">
                     <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
@@ -170,7 +178,7 @@ function deletarViagem(id) {
             </div>
           </div>
         </div>
-      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="toggleSidebar()" style="font-size: 1.2rem; position: absolute; left: 1; top: 1; padding: 1.5rem 1rem;"></i>
+      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="toggleSidebar()" style="font-size: 1.2rem; position: absolute; left: 1px; top: 1px ; padding: 1.5rem 1rem;"></i>
       <div class="user-button-area">
         <div class="user-button" @click="toggleUserOption($event)"></div>
         <div v-if="userOptionsVisible" class="options-menu" style="margin-top: 80px; margin-right: 15px; min-width: 200px;">
@@ -199,13 +207,23 @@ function deletarViagem(id) {
         <div class="chat-container mb-3">
           <h1>{{ perguntas[currentQuestionIndex].texto }}</h1>
         </div>
-        <div class="chat-card-resposta" v-for="resposta in perguntas[currentQuestionIndex].respostas" :key="resposta.value">
-          <span :class="{ 'selected-answer': selectedAnswer === resposta.value }" @click="selectAnswer(resposta.value)" style="cursor: pointer;">{{ resposta.label }}</span>
+
+        <div class="flex flex-wrap justify-content-center gap-2">
+          <div
+              class="chat-card-resposta p-3 border-round surface-card cursor-pointer"
+              v-for="resposta in perguntas[currentQuestionIndex].respostas"
+              :key="resposta.value"
+              :class="{ 'selected-answer': selectedAnswer === resposta.value }"
+              @click="selectAnswer(resposta.value)"
+          >
+            {{ resposta.label }}
+          </div>
         </div>
-        <div class="w-full justify-content-center mt-3">
-          <Button @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn" variant="text" raised class="mr-5" />
+
+        <div class="flex justify-content-center mt-3 gap-3">
+          <Button @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn" text raised />
           <Button label="Não tenho preferência" severity="secondary" raised />
-          <Button @click="goToNextQuestion" :disabled="currentQuestionIndex === perguntas.length - 1" label="Próximo" severity="warn" variant="text" raised class="ml-5" />
+          <Button @click="goToNextQuestion" :disabled="currentQuestionIndex === perguntas.length - 1" label="Próximo" severity="warn" text raised />
         </div>
 
         <div class="slider-container mt-5">
@@ -218,16 +236,32 @@ function deletarViagem(id) {
             class="slider"
           />
         </div>
-        
+        <Button label="Abrir Modal" icon="pi pi-external-link" @click="showDialog = true" />
       </div>
     </div>
   </div>
+
+  <Dialog v-model:visible="showDialog" modal :closable="false" header="Título do Modal" :style="{ width: '40vw' }">
+
+    <div class="p-3">
+      <p>Este é o conteúdo principal do modal. Você pode adicionar formulários, textos, imagens ou qualquer outro elemento aqui.</p>
+    </div>
+
+    <template #footer>
+      <div class="flex justify-content-end gap-2">
+        <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="showDialog = false" />
+        <Button label="Confirmar" icon="pi pi-check" class="p-button-success" @click="confirmAction" />
+      </div>
+    </template>
+  </Dialog>
+
+
 </template>
 
 <style scoped>
-
 .selected-answer {
-  background-color: #d0e8ff;
+  background-color: rgba(23, 32, 215, 0);
+  font-weight: bold;
 }
 
 .background-image {
@@ -393,7 +427,7 @@ function deletarViagem(id) {
     outline: none;
   }
     .chat-input-area button:hover {
-      background-color:none;
+      //background-color: none;
     }
 
 .chat-card-resposta {
