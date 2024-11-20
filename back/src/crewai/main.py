@@ -1,11 +1,7 @@
 import sys
 from crewai import Crew
-from textwrap import dedent
 from trip_agents import TripAgents
 from trip_tasks import TripTasks
-from dotenv import load_dotenv
-
-load_dotenv()
 
 class TripCrew:
     def __init__(self, origin, date_range, interests):

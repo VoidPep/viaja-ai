@@ -1,5 +1,4 @@
 from crewai import Agent
-from langchain.llms import OpenAI
 
 from tools.browser_tools import BrowserTools
 from tools.calculator_tools import CalculatorTools

@@ -9,10 +9,7 @@ export class TripPlannerController {
     async planTrip(@Body() preferencias_do_usuario: any) {
         
         try {
-            const result = await this.tripPlannerService.runTripPlanner(
-                preferencias_do_usuario.origin,
-                preferencias_do_usuario.dateRange,
-                preferencias_do_usuario.interests);
+            const result = await this.tripPlannerService.runTripPlanner(preferencias_do_usuario);
             return {
                 success: true,
                 data: result,
