@@ -53,14 +53,13 @@ const entrar = async function () {
   if (response.data.access_token) {
     localStorage.setItem("user", JSON.stringify({
       token: response.data.access_token,
+      id: response.data.id,
       email: login.value.email
     }));
 
-    router.push('/');
+    router.push(response.data.plano ? '/' : '/planos');
     return;
   }
-
-  
 }
 
 const cadastrar = async function () {
@@ -83,14 +82,24 @@ const cadastrar = async function () {
         email: cadastro.value.email
       }));
 
-    router.push('/');
+    router.push('/planos');
     return;
   }
 
 }
 
 onMounted(() => {
-  login.value = {}
+  login.value = {
+    email: 'viaja-ai@viajaai.com',
+    senha: "123"
+  }
+
+  cadastro.value = {
+    nome: "viaja-ai",
+    email: 'viaja-ai@viajaai.com',
+    senha: "123",
+    confirmar_senha: "123"
+  }
   showLogin.value = true;
 })
 </script>

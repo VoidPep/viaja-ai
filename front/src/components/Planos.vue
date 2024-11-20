@@ -14,7 +14,7 @@
           <li>3 Users</li>
           <li>Unlimited Tasks</li>
         </ul>
-        <Button label="Start for Free" class="p-button-outlined p-button-rounded plan-btn" />
+        <Button label="Start for Free" class="p-button-outlined p-button-rounded plan-btn" @click="irParaTelaInicial"/>
       </div>
 
       <div class="plan-card featured mx-4">
@@ -52,9 +52,17 @@
 </template>
 
 <script setup>
+import http from '@/http/http';
 import Button from 'primevue/button';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
+async function irParaTelaInicial() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const response = await http.post("auth/ativar-plano", { plano: "free", idUsuario: user.id });
 
+  router.push('/')
+}
 </script>
 
 <style scoped>

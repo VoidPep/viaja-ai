@@ -3,6 +3,7 @@ import { saltOrRounds } from "../../main";
 import { DataSource, Repository } from "typeorm";
 import { Usuario } from "../../modules/user/entity/user.entity";
 import { hash } from "bcrypt";
+import { Plano } from 'src/modules/plano/plano.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -21,7 +22,8 @@ export class UsuarioService {
     if (!usuario.senha)
       return {
         status: 400,
-        message: "Senha é necessária"
+        message: "Senha é necessária",
+        data: null
       }
 
     const usuarioDoBanco = await this.repository.findOneBy({
@@ -31,38 +33,31 @@ export class UsuarioService {
     if (usuarioDoBanco)
       return {
         status: 400,
-        error: "Um usuário com esse email já existe"
+        error: "Um usuário com esse email já existe",
+        data: null
       }
 
     usuario.senha = await hash(usuario.senha, saltOrRounds);
 
     if (!usuario.administrador)
       usuario.administrador = false;
-    
-    await this.repository.save(usuario)
+
+    const createdUser = await this.repository.save(usuario)
 
     return {
       status: 201,
-      message: "Criado com sucesso!"
+      message: "Criado com sucesso!",
+      data: createdUser.id
     }
   }
 
   async findOne(id: number) {
-    const usuario = await this.repository.findOneBy({
-      id: id,
-    });
-
-    if (!usuario)
-      return {
-        status: 404,
-        message: "Não encontrado"
-      }
-
-    return {
-      nome: usuario.nome,
-      email: usuario.email
-    };
+    return await this.repository.findOne({
+      where: { id },
+      relations: ['plano'],
+  });
   }
+
   async update(id: number, usuario: any) {
     if (usuario.senha) {
       usuario.senha = await hash(usuario.senha, saltOrRounds);
@@ -81,8 +76,9 @@ export class UsuarioService {
   }
 
   async findUserByEmail(email: string) {
-    return await this.repository.findOneBy({
-      email: email,
+    return await this.repository.findOne({
+      where: { email: email },
+      relations: ['plano'],
     });
   }
 }

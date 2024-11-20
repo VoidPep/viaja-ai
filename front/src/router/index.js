@@ -26,7 +26,6 @@ const routes = [
         localStorage.removeItem('user');
 
         next('/login');
-      
     },
   },
 

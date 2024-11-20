@@ -6,8 +6,9 @@ import InputText from 'primevue/inputtext';
 import Slider from "primevue/slider";
 import ViagemGerada from "@/components/ViagemGerada.vue";
 import Calendar from 'primevue/calendar';
+import { useRouter } from 'vue-router';
 
-
+const router = useRouter();
 const editOptionsVisible = ref({});
 const sidebarVisible = ref(true);
 const userOptionsVisible = ref(false);
@@ -18,6 +19,9 @@ const sliderValue = ref(50);
 const min = 0;
 const max = 100;
 
+const sair = function () {
+  router.push('logout')
+}
 
 const showDialog = ref(false);
 const confirmAction = () => {
@@ -60,7 +64,7 @@ const perguntas = ref([
     tipo: "RADIO"
   },
   {
-    texto: "Prefere locais com clima quente ou frio?",
+    texto: "Qual o clima ideal para a sua próxima viagem?",
     respostas: [
       {value: "QUENTE", label: "Quente"},
       {value: "FRIO", label: "Frio"}
@@ -188,7 +192,6 @@ function deletarViagem(id) {
         <div class="flex justify-content-between">
           <i class="pi pi-arrow-circle-left icones-hover cursor-pointer" @click="toggleSidebar()"
              style="font-size: 1.2rem;"></i>
-          <i class="pi pi-plus-circle icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
         </div>
         <div class="flex flex-column mt-4">
           <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
@@ -231,8 +234,8 @@ function deletarViagem(id) {
           <span class="flex flex-row">
             <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>Opções
           </span>
-          <span class="flex flex-row" style="color: var(--red-400)">
-            <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Aqui
+          <span class="flex flex-row" style="color: var(--red-400)" @click="sair">
+            <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Sair
           </span>
         </div>
       </div>
@@ -296,10 +299,10 @@ function deletarViagem(id) {
         </div>
 
         <div class="flex justify-content-center mt-3 gap-3">
-          <Button @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn"
+          <Button :class="currentQuestionIndex === 0 ? 'text-gray' : 'text-white'" @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn"
                   text raised/>
-          <Button label="Não tenho preferência" severity="secondary" raised/>
-          <Button @click="goToNextQuestion" :disabled="currentQuestionIndex === perguntas.length - 1" label="Próximo"
+          <!-- <Button label="Não tenho preferência" severity="secondary" raised/> -->
+          <Button :class="'text-white'" @click="goToNextQuestion" :label="currentQuestionIndex === perguntas.length - 1 ? 'Finalizar' : 'Próximo'"
                   severity="warn" text raised/>
         </div>
 
@@ -313,7 +316,7 @@ function deletarViagem(id) {
               class="slider"
           />
         </div>
-        <Button label="Abrir Modal" icon="pi pi-external-link" @click="showDialog = true"/>
+        <!-- <Button label="Abrir Modal" icon="pi pi-external-link" @click="showDialog = true"/> -->
       </div>
     </div>
   </div>
@@ -495,7 +498,7 @@ function deletarViagem(id) {
 }
 
 .chat-input-area button:hover {
-  //background-color: none;
+  
 }
 
 .chat-card-resposta {
