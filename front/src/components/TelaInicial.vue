@@ -1,7 +1,11 @@
 <script setup>
-import { onUnmounted, onMounted, ref } from 'vue';
+import {onUnmounted, onMounted, ref} from 'vue';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
+import Slider from "primevue/slider";
+import ViagemGerada from "@/components/ViagemGerada.vue";
+import Calendar from 'primevue/calendar';
 
 
 const editOptionsVisible = ref({});
@@ -11,7 +15,7 @@ const isMobile = ref(window.innerWidth < 700);
 
 //Valores slider
 const sliderValue = ref(50);
-const min = 0;              
+const min = 0;
 const max = 100;
 
 
@@ -23,8 +27,24 @@ const confirmAction = () => {
 
 // Lista de viagens
 const viagens = ref([
-  { id: 1, destino: 'México', text: 'Festas noturnas', dataInicio: '21/10/24', dataFim: '30/10/24', fixado: false, dataCriacao: '25/10/24 - 00:00:00' },
-  { id: 2, destino: 'Brasil', text: 'Gastronomia', dataInicio: '05/11/24', dataFim: '15/11/24', fixado: false, dataCriacao: '25/10/24 - 00:00:00' },
+  {
+    id: 1,
+    destino: 'México',
+    text: 'Festas noturnas',
+    dataInicio: '21/10/24',
+    dataFim: '30/10/24',
+    fixado: false,
+    dataCriacao: '25/10/24 - 00:00:00'
+  },
+  {
+    id: 2,
+    destino: 'Brasil',
+    text: 'Gastronomia',
+    dataInicio: '05/11/24',
+    dataFim: '15/11/24',
+    fixado: false,
+    dataCriacao: '25/10/24 - 00:00:00'
+  },
   // ... demais itens omitidos para clareza
 ]);
 
@@ -32,24 +52,42 @@ const perguntas = ref([
   {
     texto: "Qual tipo de experiência você prefere?",
     respostas: [
-      { value: "NOTURNO", label: "Festas noturnas" },
-      { value: "GASTRONOMIA", label: "Gastronomia" },
-      { value: "CULTURA", label: "Experiências culturais" }
+      {value: "NOTURNO", label: "Festas noturnas"},
+      {value: "GASTRONOMIA", label: "Gastronomia"},
+      {value: "CULTURA", label: "Cultural"},
+      {value: "PRAIA", label: "Praias"}
     ],
-    tipo: "TEXT"
+    tipo: "RADIO"
   },
   {
     texto: "Prefere locais com clima quente ou frio?",
     respostas: [
-      { value: "QUENTE", label: "Quente" },
-      { value: "FRIO", label: "Frio" }
+      {value: "QUENTE", label: "Quente"},
+      {value: "FRIO", label: "Frio"}
     ],
-    tipo: "TEXT"
+    tipo: "RADIO"
+  },
+  {
+    texto: "Em qual data voce deseja viajar?",
+    respostas: [
+      {value: "DATA_FINAL", label: "Data"},
+      {value: "DATA_INICIAL", label: "Data"},
+    ],
+    tipo: "DATE"
+  },
+  {
+    texto: "Qual é sua faixa de orçamento para a viagem? (em R$)",
+    respostas: [
+      {value: "valor", label: "Data"},
+    ],
+    tipo: "RANGE"
   },
 ]);
 
 const currentQuestionIndex = ref(0);
 const selectedAnswer = ref(null);
+const textAnswer = ref("");
+const rangeValue = ref(500);
 
 function selectAnswer(answer) {
   selectedAnswer.value = answer;
@@ -82,7 +120,7 @@ function toggleUserOption(event) {
 function toggleEditOptions(event, id) {
   event.stopPropagation();
   if (editOptionsVisible.value[id]) {
-    editOptionsVisible.value[id] = false; 
+    editOptionsVisible.value[id] = false;
   } else {
     hideEditOptions();
     editOptionsVisible.value[id] = true;
@@ -120,7 +158,7 @@ function fixarViagem(id) {
     const [fixedItem] = viagens.value.splice(index, 1);
     fixedItem.fixado = true;
     viagens.value.unshift(fixedItem);
-    hideEditOptions(); 
+    hideEditOptions();
   }
 }
 
@@ -130,13 +168,13 @@ function desafixarViagem(id) {
     const [fixedItem] = viagens.value.splice(index, 1);
     fixedItem.fixado = false;
     viagens.value.push(fixedItem);
-    hideEditOptions(); 
+    hideEditOptions();
   }
 }
 
 function deletarViagem(id) {
   const index = viagens.value.findIndex(viagem => viagem.id === id);
-  if(index !== -1) {
+  if (index !== -1) {
     viagens.value.splice(index, 1);
     hideEditOptions();
   }
@@ -146,59 +184,69 @@ function deletarViagem(id) {
 <template>
   <div class="background-image h-screen">
     <div class="grid grid-nogutter">
-        <div class="h-screen sidebar-totalArea" v-if="sidebarVisible">
-          <div class="flex justify-content-between">
-            <i class="pi pi-arrow-circle-left icones-hover cursor-pointer" @click="toggleSidebar()" style="font-size: 1.2rem;"></i>
-            <i class="pi pi-plus-circle icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
-          </div>
-          <div class="flex flex-column mt-4">
-            <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
-            <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
-              <div class="scrollable-container">
-                <div v-for="viagem in viagens" :key="viagem.id" :class="{'item-fixado': viagem.fixado}" class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
-                  <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
-                  <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">{{ viagem.text }}</div>
-                  <div class="topicos-viagemGerada flex flex-column">
-                    <span> {{ viagem.dataInicio }}</span>
-                    <span> {{ viagem.dataFim }}</span>
-                  </div>
-                  <div class="itemEdit-area" style="position: relative;">
-                    <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
-                    <div class="options-menu" v-if="editOptionsVisible[viagem.id]">
-                      <span class="flex flex-row" @click="viagem.fixado ? desafixarViagem(viagem.id) : fixarViagem(viagem.id)">
-                        <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar': 'Fixar' }}
+      <div class="h-screen sidebar-totalArea" v-if="sidebarVisible">
+        <div class="flex justify-content-between">
+          <i class="pi pi-arrow-circle-left icones-hover cursor-pointer" @click="toggleSidebar()"
+             style="font-size: 1.2rem;"></i>
+          <i class="pi pi-plus-circle icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
+        </div>
+        <div class="flex flex-column mt-4">
+          <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
+          <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
+            <div class="scrollable-container">
+              <div v-for="viagem in viagens" :key="viagem.id" :class="{'item-fixado': viagem.fixado}"
+                   class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
+                <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
+                <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">
+                  {{ viagem.text }}
+                </div>
+                <div class="topicos-viagemGerada flex flex-column">
+                  <span> {{ viagem.dataInicio }}</span>
+                  <span> {{ viagem.dataFim }}</span>
+                </div>
+                <div class="itemEdit-area" style="position: relative;">
+                  <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
+                  <div class="options-menu" v-if="editOptionsVisible[viagem.id]">
+                      <span class="flex flex-row"
+                            @click="viagem.fixado ? desafixarViagem(viagem.id) : fixarViagem(viagem.id)">
+                        <i class="pi pi-tag"
+                           style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar' : 'Fixar' }}
                       </span>
-                      <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
+                    <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
                         <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Deletar
                       </span>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="toggleSidebar()" style="font-size: 1.2rem; position: absolute; left: 1px; top: 1px ; padding: 1.5rem 1rem;"></i>
+      </div>
+      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="toggleSidebar()"
+         style="font-size: 1.2rem; position: absolute; left: 1px; top: 1px ; padding: 1.5rem 1rem;"></i>
       <div class="user-button-area">
         <div class="user-button" @click="toggleUserOption($event)"></div>
-        <div v-if="userOptionsVisible" class="options-menu" style="margin-top: 80px; margin-right: 15px; min-width: 200px;">
+        <div v-if="userOptionsVisible" class="options-menu"
+             style="margin-top: 80px; margin-right: 15px; min-width: 200px;">
           <span class="flex flex-row">
             <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>Opções
           </span>
-          <span class="flex flex-row" style="color: var(--red-400)" >
+          <span class="flex flex-row" style="color: var(--red-400)">
             <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Aqui
           </span>
         </div>
       </div>
-      <div class="h-screen" :class="{ 'chat-totalArea': sidebarVisible }" style="display:flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
-        
+      <div class="h-screen" :class="{ 'chat-totalArea': sidebarVisible }"
+           style="display:flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+
         <div class="chat-input-area">
-          <input 
-            type="text"
-            placeholder="Digite uma mensagem..."
+          <input
+              type="text"
+              placeholder="Digite uma mensagem..."
           >
-          <button><i class="pi pi-arrow-circle-right icones-hover cursor-pointer" style="font-size: 1.2rem;"></i></button>
-        </div><!-- Chat box -->
+          <button><i class="pi pi-arrow-circle-right icones-hover cursor-pointer" style="font-size: 1.2rem;"></i>
+          </button>
+        </div>
 
         <div class="chat-container mb-3">
           <h1><!--Perguntas aqui--></h1>
@@ -208,53 +256,69 @@ function deletarViagem(id) {
           <h1>{{ perguntas[currentQuestionIndex].texto }}</h1>
         </div>
 
-        <div class="flex flex-wrap justify-content-center gap-2">
+        <div>
+
           <div
-              class="chat-card-resposta p-3 border-round surface-card cursor-pointer"
-              v-for="resposta in perguntas[currentQuestionIndex].respostas"
-              :key="resposta.value"
-              :class="{ 'selected-answer': selectedAnswer === resposta.value }"
-              @click="selectAnswer(resposta.value)"
+              v-if="perguntas[currentQuestionIndex].tipo === 'RADIO'"
+              class="flex flex-wrap justify-content-center gap-2"
           >
-            {{ resposta.label }}
+            <div
+                class="chat-card-resposta p-3 border-round surface-card cursor-pointer"
+                v-for="resposta in perguntas[currentQuestionIndex].respostas"
+                :key="resposta.value"
+                :class="{ 'selected-answer justify-content-center flex': selectedAnswer === resposta.value }"
+                @click="selectAnswer(resposta.value)"
+            >
+              {{ resposta.label }}
+            </div>
+          </div>
+
+          <div v-if="perguntas[currentQuestionIndex].tipo === 'TEXT_INPUT'" class="p-fluid">
+            <InputText
+                v-model="textAnswer"
+                placeholder="Digite sua resposta aqui"
+                class="w-full"
+            />
+          </div>
+
+          <div v-if="perguntas[currentQuestionIndex].tipo === 'DATE'" class="p-fluid flex grid gap-5">
+            <Calendar v-model="date" dateFormat="dd/mm/yy" placeholder="dd/mm/yy"/>
+
+            <Calendar v-model="date" dateFormat="dd/mm/yy" placeholder="dd/mm/yy"/>
+          </div>
+
+          <div v-if="perguntas[currentQuestionIndex].tipo === 'RANGE'" class="p-fluid">
+            <div class="gap-2 flex flex-column p-m-3">
+              <InputText v-model.number="rangeValue" class="p-mb-3"/>
+              <Slider v-model="rangeValue" :min="0" :max="10000" class="p-mt-3"/>
+            </div>
           </div>
         </div>
 
         <div class="flex justify-content-center mt-3 gap-3">
-          <Button @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn" text raised />
-          <Button label="Não tenho preferência" severity="secondary" raised />
-          <Button @click="goToNextQuestion" :disabled="currentQuestionIndex === perguntas.length - 1" label="Próximo" severity="warn" text raised />
+          <Button @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn"
+                  text raised/>
+          <Button label="Não tenho preferência" severity="secondary" raised/>
+          <Button @click="goToNextQuestion" :disabled="currentQuestionIndex === perguntas.length - 1" label="Próximo"
+                  severity="warn" text raised/>
         </div>
 
         <div class="slider-container mt-5">
           <div class="slider-value">{{ sliderValue }}</div>
           <input
-            type="range"
-            v-model="sliderValue"
-            :min="min"
-            :max="max"
-            class="slider"
+              type="range"
+              v-model="sliderValue"
+              :min="min"
+              :max="max"
+              class="slider"
           />
         </div>
-        <Button label="Abrir Modal" icon="pi pi-external-link" @click="showDialog = true" />
+        <Button label="Abrir Modal" icon="pi pi-external-link" @click="showDialog = true"/>
       </div>
     </div>
   </div>
 
-  <Dialog v-model:visible="showDialog" modal :closable="false" header="Título do Modal" :style="{ width: '40vw' }">
-
-    <div class="p-3">
-      <p>Este é o conteúdo principal do modal. Você pode adicionar formulários, textos, imagens ou qualquer outro elemento aqui.</p>
-    </div>
-
-    <template #footer>
-      <div class="flex justify-content-end gap-2">
-        <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="showDialog = false" />
-        <Button label="Confirmar" icon="pi pi-check" class="p-button-success" @click="confirmAction" />
-      </div>
-    </template>
-  </Dialog>
-
+  <ViagemGerada v-model:visible="showDialog" roteiro=""></ViagemGerada>
 
 </template>
 
@@ -298,21 +362,22 @@ function deletarViagem(id) {
 
 .scrollable-container {
   transition: 0.1s all linear;
-  flex: 1; 
-  overflow-y: auto; 
-  max-height: calc(100vh - 200px); 
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
   padding: 0 10px;
 }
 
 .item-viagemGerada {
   font-size: 1rem;
-  gap:3px;
+  gap: 3px;
   background-color: #dfdfdf;
   margin-bottom: 20px;
   padding: 20px 8px;
   border-radius: 10px;
   transition: 0.1s linear all;
 }
+
 .item-viagemGerada:hover {
   background-color: #cacaca;
 }
@@ -347,7 +412,7 @@ function deletarViagem(id) {
 }
 
 .options-menu span {
-  cursor:pointer;
+  cursor: pointer;
   padding: 10px;
   border-radius: 10px;
   width: 100%;
@@ -366,30 +431,30 @@ function deletarViagem(id) {
 
 .scrollable-container {
   flex: 1;
-  overflow-y: auto; 
-  max-height: calc(100vh - 200px); 
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
   padding: 0 10px;
 }
 
 .scrollable-container::-webkit-scrollbar {
-  width: 8px; 
+  width: 8px;
 }
 
 .scrollable-container::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
 
 .scrollable-container::-webkit-scrollbar-thumb {
-  background: rgba(146, 146, 146, 0.7); 
-  border-radius: 10px; 
+  background: rgba(146, 146, 146, 0.7);
+  border-radius: 10px;
 }
 
 .scrollable-container::-webkit-scrollbar-thumb:hover {
-  background: #5272ff4d; 
+  background: #5272ff4d;
 }
 
 .chat-totalArea {
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -403,37 +468,40 @@ function deletarViagem(id) {
 
 .chat-input-area {
   width: 100%;
-  display:none;
+  display: none;
   justify-content: center;
 }
 
-  .chat-input-area input {
-    border-radius: 20px 0px 0px 20px; 
-    border: none;
-    outline: none;
-    padding: 1rem 1.5rem;
-    width: 80%;
-    background-color: rgba(236, 236, 236, 0.88);
-    max-width: 650px;
-  }
-    .chat-input-area input::placeholder {
-      font-size: 18px;
-    }
-  .chat-input-area button{
-    border-radius: 0px 20px 20px 0px;
-    padding-right: 10px;
-    background-color: rgba(236, 236, 236, 0.88);
-    border: none;
-    outline: none;
-  }
-    .chat-input-area button:hover {
-      //background-color: none;
-    }
+.chat-input-area input {
+  border-radius: 20px 0px 0px 20px;
+  border: none;
+  outline: none;
+  padding: 1rem 1.5rem;
+  width: 80%;
+  background-color: rgba(236, 236, 236, 0.88);
+  max-width: 650px;
+}
+
+.chat-input-area input::placeholder {
+  font-size: 18px;
+}
+
+.chat-input-area button {
+  border-radius: 0px 20px 20px 0px;
+  padding-right: 10px;
+  background-color: rgba(236, 236, 236, 0.88);
+  border: none;
+  outline: none;
+}
+
+.chat-input-area button:hover {
+  //background-color: none;
+}
 
 .chat-card-resposta {
   cursor: pointer;
   transition: 0.1s all linear;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 10rem;
@@ -454,7 +522,7 @@ function deletarViagem(id) {
 .chat-card-resposta:hover {
   background-color: #dedede;
 }
-  
+
 .user-button {
   cursor: pointer;
   background-color: #000;
@@ -479,12 +547,12 @@ function deletarViagem(id) {
   font-size: 2.5em;
   font-weight: bold;
   color: #333;
-  display:none;
+  display: none;
 }
 
 .slider {
   width: 25rem;
-  display:none;
+  display: none;
 }
 
 @media (width < 1024px) {
@@ -499,7 +567,7 @@ function deletarViagem(id) {
   }
 }
 
-@media(width < 700px) {
+@media (width < 700px) {
   .sidebar-totalArea {
     width: 100%;
     background-color: #b0beff;
@@ -509,13 +577,16 @@ function deletarViagem(id) {
     width: 100%;
     margin-left: 0px;
   }
+
   .scrollable-container {
     max-height: calc(100vh - 50px);
   }
+
   .chat-card-resposta {
     width: 7rem;
     height: 7rem;
   }
+
   .chat-card-resposta span {
     font-size: 1rem;
   }

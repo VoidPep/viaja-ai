@@ -14,6 +14,12 @@ const routes = [
     component: () => import('@/components/CadastroUsuario.vue')
   },
   {
+    path: '/planos',
+    name: 'planos',
+    meta: { title: 'Planos' },
+    component: () => import('@/components/Planos.vue')
+  },
+  {
     path: '/logout',
     name: 'logout',
     beforeEnter: async (to, from, next) => {
