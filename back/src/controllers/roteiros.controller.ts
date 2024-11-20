@@ -1,37 +1,26 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Logger} from '@nestjs/common';
 import { RoteirosService } from '../services/roteiros/roteiros.service';
-import { CreateRoteiroDto } from '../modules/roteiros/dto/create-roteiro.dto';
-import { UpdateRoteiroDto } from '../modules/roteiros/dto/update-roteiro.dto';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
+import { GeminiService } from 'src/services/gemini/gemini.service';
+import { promptGemini } from 'src/common/gemini-prompt';
 
 @Controller('roteiros')
 export class RoteirosController {
-  constructor(private readonly roteirosService: RoteirosService) {}
+  constructor(
+    private readonly roteirosService: RoteirosService,
+    private readonly geminiService: GeminiService
+  ) {}
 
-  @Post()
-  create(@Body() createRoteiroDto: CreateRoteiroDto) {
-    return this.roteirosService.create(createRoteiroDto);
+  @Post("gerar-viagem")
+  async gerarViagem(@Body() request:any) {
+    const prompt = promptGemini(request)
+
+    const viagemGerada = await this.geminiService.getResponse(prompt);
+    return viagemGerada;
+
+
   }
 
-  @Get()
-  findAll() {
-    return this.roteirosService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.roteirosService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoteiroDto: UpdateRoteiroDto) {
-    return this.roteirosService.update(+id, updateRoteiroDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roteirosService.remove(+id);
-  }
   @UseGuards(AuthGuard)
   @Get("getByLoggedUser")
   getByLoggedUser() {

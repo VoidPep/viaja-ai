@@ -18,6 +18,9 @@ export class Roteiro {
     @Column()
     custo_total_estimado: number;
 
+    @Column()
+    json: string;
+
     @ManyToOne(() => Usuario, (usuario) => usuario.roteiros, { nullable: true })
     @JoinColumn({ name: 'idUsuario' })
     usuario: Usuario;

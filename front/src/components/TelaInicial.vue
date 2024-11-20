@@ -7,6 +7,7 @@ import Slider from "primevue/slider";
 import ViagemGerada from "@/components/ViagemGerada.vue";
 import Calendar from 'primevue/calendar';
 import { useRouter } from 'vue-router';
+import http from '@/http/http';
 
 const router = useRouter();
 const editOptionsVisible = ref({});
@@ -18,6 +19,8 @@ const isMobile = ref(window.innerWidth < 700);
 const sliderValue = ref(50);
 const min = 0;
 const max = 100;
+const dataInicial = ref();
+const dataFinal = ref();
 
 const sair = function () {
   router.push('logout')
@@ -56,7 +59,7 @@ const perguntas = ref([
   {
     texto: "Qual tipo de experiência você prefere?",
     respostas: [
-      {value: "NOTURNO", label: "Festas noturnas"},
+      {value: "FESTAS_NOTURNAS", label: "Festas noturnas"},
       {value: "GASTRONOMIA", label: "Gastronomia"},
       {value: "CULTURA", label: "Cultural"},
       {value: "PRAIA", label: "Praias"}
@@ -66,8 +69,8 @@ const perguntas = ref([
   {
     texto: "Qual o clima ideal para a sua próxima viagem?",
     respostas: [
-      {value: "QUENTE", label: "Quente"},
-      {value: "FRIO", label: "Frio"}
+      {value: "CLIMA_QUENTE", label: "Quente"},
+      {value: "CLIMA_FRIO", label: "Frio"}
     ],
     tipo: "RADIO"
   },
@@ -89,25 +92,37 @@ const perguntas = ref([
 ]);
 
 const currentQuestionIndex = ref(0);
-const selectedAnswer = ref(null);
+const selectedAnswer = ref([]);
 const textAnswer = ref("");
 const rangeValue = ref(500);
 
-function selectAnswer(answer) {
-  selectedAnswer.value = answer;
+function selectAnswer(answer, index) {
+  selectedAnswer.value[index] = answer;
 }
 
-function goToNextQuestion() {
+async function goToNextQuestion() {
+if(currentQuestionIndex.value === perguntas.value.length - 1) {
+  const form = {
+    data_inicial: dataInicial.value.toISOString(),
+    data_final: dataFinal.value.toISOString(),
+    orcamento: rangeValue.value,
+    preferencias: selectedAnswer.value
+  }
+  
+  const response = await http.post('roteiros/gerar-viagem', form)
+  console.log(response)
+
+  return;
+}
+  
   if (currentQuestionIndex.value < perguntas.value.length - 1) {
     currentQuestionIndex.value++;
-    selectedAnswer.value = null;
   }
 }
 
 function goToPreviousQuestion() {
   if (currentQuestionIndex.value > 0) {
     currentQuestionIndex.value--;
-    selectedAnswer.value = null;
   }
 }
 
@@ -269,8 +284,8 @@ function deletarViagem(id) {
                 class="chat-card-resposta p-3 border-round surface-card cursor-pointer"
                 v-for="resposta in perguntas[currentQuestionIndex].respostas"
                 :key="resposta.value"
-                :class="{ 'selected-answer justify-content-center flex': selectedAnswer === resposta.value }"
-                @click="selectAnswer(resposta.value)"
+                :class="{ 'selected-answer justify-content-center flex': selectedAnswer[currentQuestionIndex] === resposta.value }"
+                @click="selectAnswer(resposta.value, currentQuestionIndex)"
             >
               {{ resposta.label }}
             </div>
@@ -285,9 +300,9 @@ function deletarViagem(id) {
           </div>
 
           <div v-if="perguntas[currentQuestionIndex].tipo === 'DATE'" class="p-fluid flex grid gap-5">
-            <Calendar v-model="date" dateFormat="dd/mm/yy" placeholder="dd/mm/yy"/>
+            <Calendar v-model="dataInicial" dateFormat="dd/mm/yy" placeholder="dd/mm/yy"/>
 
-            <Calendar v-model="date" dateFormat="dd/mm/yy" placeholder="dd/mm/yy"/>
+            <Calendar v-model="dataFinal" dateFormat="dd/mm/yy" placeholder="dd/mm/yy"/>
           </div>
 
           <div v-if="perguntas[currentQuestionIndex].tipo === 'RANGE'" class="p-fluid">
@@ -305,7 +320,6 @@ function deletarViagem(id) {
           <Button :class="'text-white'" @click="goToNextQuestion" :label="currentQuestionIndex === perguntas.length - 1 ? 'Finalizar' : 'Próximo'"
                   severity="warn" text raised/>
         </div>
-
         <div class="slider-container mt-5">
           <div class="slider-value">{{ sliderValue }}</div>
           <input

@@ -2,21 +2,21 @@ import { PromptRequest } from "../modules/gemini/gemini.request";
 
 const promptGemini = function (request: PromptRequest): string {
   const {
-    destinos_preferidos,
-    mes_viagem,
-    atividades,
-    preferencias_acomodacao,
+    data_final,
+    data_inicial,
     orcamento,
+    preferencias,
   } = { ...request };
 
   return `
-        Eu gostaria de planejar uma viagem para ${destinos_preferidos} no período de ${mes_viagem}. Prefiro destinos com
-        ${atividades}, ${preferencias_acomodacao}.
+        Eu gostaria de planejar uma viagem no período de ${data_inicial} a ${data_final}. Prefiro destinos com
+        as seguintes categorias:
+        ${preferencias.join(', ')}.
         Tenho um orçamento de até ${orcamento}.
         Realize a busca utilizando APIs externas de viagens (Google Travel, Skyscanner, etc.) para encontrar pacotes ou
         passagens e hospedagens que correspondam ao orçamento.
 
-        Envie as informações em um json com este seguinte formato:
+        Envie as informações em um json com este seguinte formato, detalhe não adicione comentarios nesse json pois sera convertido:
         {
           "destino": {
             "cidade": "",
@@ -29,12 +29,12 @@ const promptGemini = function (request: PromptRequest): string {
             {
               "atividade": "",
               "custo_estimado": ,
-              "descrição": ""
+              "descricao": ""
             },
             {
               "atividade": "",
               "custo_estimado": ,
-              "descrição": ""
+              "descricao": ""
             }
           ],
           "hospedagem": [

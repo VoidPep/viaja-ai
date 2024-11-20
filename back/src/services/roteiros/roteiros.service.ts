@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoteiroDto } from '../../modules/roteiros/dto/create-roteiro.dto';
-import { UpdateRoteiroDto } from '../../modules/roteiros/dto/update-roteiro.dto';
 import { Roteiro } from '../../modules/roteiros/entities/roteiro.entity';
 import { DataSource, Repository } from 'typeorm';
 
@@ -23,10 +22,6 @@ export class RoteirosService {
 
   findOne(id: number) {
     return `This action returns a #${id} roteiro`;
-  }
-
-  update(id: number, updateRoteiroDto: UpdateRoteiroDto) {
-    return `This action updates a #${id} roteiro`;
   }
 
   remove(id: number) {
