@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { saltOrRounds } from "../../main";
 import { DataSource, Repository } from "typeorm";
 import { Usuario } from "../../modules/user/entity/user.entity";
@@ -52,7 +52,6 @@ export class UsuarioService {
   }
 
   async findOne(id: number) {
-    Logger.log(id)
     return await this.repository.findOne({
       where: { id },
       relations: ['plano'],

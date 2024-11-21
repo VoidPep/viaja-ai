@@ -24,16 +24,7 @@ export class RoteirosService {
   async create(roteiro: any) {
     return await this.repository.save(roteiro)
   }
-
-  findAll() {
-    return `This action returns all roteiros`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} roteiro`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} roteiro`;
+  async remove(id: number) {
+    return await this.repository.delete(id)
   }
 }

@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 @Injectable()

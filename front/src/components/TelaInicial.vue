@@ -115,8 +115,14 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
 
     viagemSelecionada.value = novo
     dialogVisualizarViagem.value = true
+
+    dataInicial.value = null;
+    dataFinal.value = null;
+    rangeValue.value = 500;
+    selectedAnswer.value = [];
   }
-  
+  currentQuestionIndex.value = 0
+
   return;
 }
   
@@ -211,31 +217,33 @@ onUnmounted(() => {
 });
 
 function fixarViagem(id) {
-  const index = viagens.value.findIndex(viagem => viagem.id === id);
+  const index = viagensGeradasDoUsuario.value.findIndex(viagem => viagem.id === id);
   if (index !== -1) {
-    const [fixedItem] = viagens.value.splice(index, 1);
+    const [fixedItem] = viagensGeradasDoUsuario.value.splice(index, 1);
     fixedItem.fixado = true;
-    viagens.value.unshift(fixedItem);
+    viagensGeradasDoUsuario.value.unshift(fixedItem);
     hideEditOptions();
   }
 }
 
 function desafixarViagem(id) {
-  const index = viagens.value.findIndex(viagem => viagem.id === id);
+  const index = viagensGeradasDoUsuario.value.findIndex(viagem => viagem.id === id);
   if (index !== -1) {
     const [fixedItem] = viagens.value.splice(index, 1);
     fixedItem.fixado = false;
-    viagens.value.push(fixedItem);
+    viagensGeradasDoUsuario.value.push(fixedItem);
     hideEditOptions();
   }
 }
 
-function deletarViagem(id) {
-  const index = viagens.value.findIndex(viagem => viagem.id === id);
+async function deletarViagem(id) {
+  const index = viagensGeradasDoUsuario.value.findIndex(viagem => viagem.id === id);
   if (index !== -1) {
-    viagens.value.splice(index, 1);
+    viagensGeradasDoUsuario.value.splice(index, 1);
     hideEditOptions();
   }
+
+  await http.delete(`roteiros/${id}`)
 }
 
 function abrirDialogViagemGerada(viagemParaVisualizar) {
@@ -260,12 +268,13 @@ const viagemSelecionada = ref(null)
           <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
             <div class="scrollable-container">
               <div v-for="viagem in viagensGeradasDoUsuario" :key="viagem.id" :class="{'item-fixado': viagem.fixado}"
-                  @click="abrirDialogViagemGerada(viagem)"
                    class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
-                <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
-                <div class="topicos-viagemGerada flex flex-column">
-                  <span> {{ viagem.dataInicio }}</span>
-                  <span> {{ viagem.dataFim }}</span>
+                <div class="flex flex-row justify-content-between w-full align-items-center" @click="abrirDialogViagemGerada(viagem)">
+                  <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
+                  <div class="topicos-viagemGerada flex flex-column">
+                    <span> {{ viagem.dataInicio }}</span>
+                    <span> {{ viagem.dataFim }}</span>
+                  </div>
                 </div>
                 <div class="itemEdit-area" style="position: relative;">
                   <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
@@ -275,7 +284,7 @@ const viagemSelecionada = ref(null)
                         <i class="pi pi-tag"
                            style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar' : 'Fixar' }}
                       </span>
-                    <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
+                      <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
                         <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Deletar
                       </span>
                   </div>
@@ -416,8 +425,8 @@ const viagemSelecionada = ref(null)
         Companhia: {{ viagemSelecionada.conteudo.passagens_aereas.companhia_aerea }}<br />
         Ida: {{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_ida }} 
         ({{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_ida }})<br />
-        Volta: {{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_volta }} 
-        ({{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_volta }})<br />
+        Volta: {{ formatDate(new Date(viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_volta)) }} 
+        ({{ formatDate(new Date(viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_volta)) }})<br />
         Custo total: {{ formatCurrency(viagemSelecionada.conteudo.passagens_aereas.custo_total) }}
       </p>
     <div class="flex justify-content-end gap-2">
