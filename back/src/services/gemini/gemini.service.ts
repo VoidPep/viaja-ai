@@ -19,7 +19,6 @@ export class GeminiService {
                 // Remover comentários do JSON
                 jsonString = jsonString.replace(/\/\/.*$/gm, '').trim();
                 
-                Logger.log(jsonString);
                 try {
                     jsonObject = JSON.parse(jsonString);
                 } catch (error) {

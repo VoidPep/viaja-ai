@@ -4,11 +4,18 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Slider from "primevue/slider";
-import ViagemGerada from "@/components/ViagemGerada.vue";
 import Calendar from 'primevue/calendar';
 import { useRouter } from 'vue-router';
 import http from '@/http/http';
+import { Card } from 'primevue/card';
 
+const formatCurrency = (value) => {
+  if (typeof value !== 'number') return 'N/A';
+  return value.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+};
 const router = useRouter();
 const editOptionsVisible = ref({});
 const sidebarVisible = ref(true);
@@ -31,29 +38,6 @@ const confirmAction = () => {
   console.log('Ação confirmada');
   showDialog.value = false;
 };
-
-// Lista de viagens
-const viagens = ref([
-  {
-    id: 1,
-    destino: 'México',
-    text: 'Festas noturnas',
-    dataInicio: '21/10/24',
-    dataFim: '30/10/24',
-    fixado: false,
-    dataCriacao: '25/10/24 - 00:00:00'
-  },
-  {
-    id: 2,
-    destino: 'Brasil',
-    text: 'Gastronomia',
-    dataInicio: '05/11/24',
-    dataFim: '15/11/24',
-    fixado: false,
-    dataCriacao: '25/10/24 - 00:00:00'
-  },
-  // ... demais itens omitidos para clareza
-]);
 
 const perguntas = ref([
   {
@@ -101,7 +85,7 @@ function selectAnswer(answer, index) {
 }
 
 async function goToNextQuestion() {
-const usuario = localStorage.getItem('user')
+const usuario = JSON.parse(localStorage.getItem('user'))
 const idUsuario = usuario.id
 
 if(currentQuestionIndex.value === perguntas.value.length - 1) {
@@ -114,14 +98,54 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
   }
   
   const response = await http.post('roteiros/gerar-viagem', form)
-  console.log(response)
+  
+  if(response.data) {
+    const dataFim =formatDate(new Date(response.data.dataFim))
+    const dataInicio =formatDate(new Date(response.data.dataInicio))
+    const novo = {
+      id: response.data.id,
+      custo_total_estimado: response.data.custo_total_estimado,
+      dataFim: dataFim,
+      dataInicio: dataInicio,
+      destino: response.data.destino,
+      conteudo: JSON.parse(response.data.json)
+    }
 
+    viagensGeradasDoUsuario.value.push(novo)
+
+    viagemSelecionada.value = novo
+    dialogVisualizarViagem.value = true
+  }
+  
   return;
 }
   
   if (currentQuestionIndex.value < perguntas.value.length - 1) {
     currentQuestionIndex.value++;
   }
+}
+
+async function getUserTrips() {
+  const usuario = JSON.parse(localStorage.getItem('user'))
+  const idUsuario = usuario.id
+
+  const response = await http.get(`roteiros/getByLoggedUser/${idUsuario}`)
+  viagensGeradasDoUsuario.value = [];
+
+  if(response.data)
+  viagensGeradasDoUsuario.value = response.data.map(q => {
+    const dataFim =formatDate(new Date(q.dataFim))
+    const dataInicio =formatDate(new Date(q.dataInicio))
+
+    return {
+      id: q.id,
+      custo_total_estimado: q.custo_total_estimado,
+      dataFim: dataFim,
+      dataInicio: dataInicio,
+      destino: q.destino,
+      conteudo: JSON.parse(q.json)
+    }
+  })
 }
 
 function goToPreviousQuestion() {
@@ -162,13 +186,24 @@ function handleResize() {
   sidebarVisible.value = !isMobile.value;
 }
 
-onMounted(() => {
+const viagensGeradasDoUsuario = ref([])
+onMounted(async () => {
   if (isMobile.value) {
     sidebarVisible.value = false;
   }
   window.addEventListener('resize', handleResize);
   document.addEventListener('click', hideEditOptions);
+
+  await getUserTrips()
 });
+
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0'); 
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
 
 onUnmounted(() => {
   document.removeEventListener('click', hideEditOptions);
@@ -202,6 +237,14 @@ function deletarViagem(id) {
     hideEditOptions();
   }
 }
+
+function abrirDialogViagemGerada(viagemParaVisualizar) {
+  viagemSelecionada.value = viagemParaVisualizar
+  dialogVisualizarViagem.value = true
+}
+
+const dialogVisualizarViagem = ref(false)
+const viagemSelecionada = ref(null)
 </script>
 
 <template>
@@ -216,12 +259,10 @@ function deletarViagem(id) {
           <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
           <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
             <div class="scrollable-container">
-              <div v-for="viagem in viagens" :key="viagem.id" :class="{'item-fixado': viagem.fixado}"
+              <div v-for="viagem in viagensGeradasDoUsuario" :key="viagem.id" :class="{'item-fixado': viagem.fixado}"
+                  @click="abrirDialogViagemGerada(viagem)"
                    class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
                 <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
-                <div class="topicos-viagemGerada" style="max-width: 152px; overflow-x: hidden; text-align: center;">
-                  {{ viagem.text }}
-                </div>
                 <div class="topicos-viagemGerada flex flex-column">
                   <span> {{ viagem.dataInicio }}</span>
                   <span> {{ viagem.dataFim }}</span>
@@ -339,8 +380,51 @@ function deletarViagem(id) {
     </div>
   </div>
 
-  <ViagemGerada v-model:visible="showDialog" roteiro=""></ViagemGerada>
-
+  <Dialog v-model:visible="dialogVisualizarViagem" modal header="Visualizar viagem gerada" :style="{ width: '40rem' }">
+    <p>
+      Roteiro de Viagem - {{ viagemSelecionada.destino }}
+    </p>
+    <p>
+      {{ viagemSelecionada.dataInicio }} a {{ viagemSelecionada.dataFim }} ({{ viagemSelecionada.conteudo.total_dias }} dias)
+    </p>
+  
+      <p>Custo total estimado: <strong>{{ formatCurrency(viagemSelecionada.custo_total_estimado) }}</strong></p>
+  
+      <h3>Atividades Recomendadas</h3>
+      <ul>
+        <li v-for="(atividade, index) in viagemSelecionada.conteudo.atividades_recomendadas" :key="index">
+          <strong>{{ atividade.atividade }}</strong> - 
+          {{ formatCurrency(atividade.custo_estimado) }}<br />
+          <em>{{ atividade.descrição }}</em>
+        </li>
+      </ul>
+  
+      <h3>Hospedagem</h3>
+      <ul>
+        <li v-for="(hotel, index) in viagemSelecionada.conteudo.hospedagem" :key="index">
+          <strong>{{ hotel.hotel }}</strong> ({{ hotel.estrelas }} estrelas)<br />
+          Cidade: {{ hotel.cidade }} - Noites: {{ hotel.noites }}<br />
+          Custo por noite: {{ formatCurrency(hotel.custo_por_noite) }}<br />
+          Custo total: {{ formatCurrency(hotel.custo_total) }}
+        </li>
+      </ul>
+  
+      <h3>Passagens Aéreas</h3>
+      <p>
+        <strong>{{ viagemSelecionada.conteudo.passagens_aereas.origem }}</strong> para 
+        <strong>{{ viagemSelecionada.conteudo.passagens_aereas.destino }}</strong> - 
+        Companhia: {{ viagemSelecionada.conteudo.passagens_aereas.companhia_aerea }}<br />
+        Ida: {{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_ida }} 
+        ({{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_ida }})<br />
+        Volta: {{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_volta }} 
+        ({{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_volta }})<br />
+        Custo total: {{ formatCurrency(viagemSelecionada.conteudo.passagens_aereas.custo_total) }}
+      </p>
+    <div class="flex justify-content-end gap-2">
+        <Button type="button" label="Fechar" severity="secondary" @click="dialogVisualizarViagem = false"></Button>
+    </div>
+</Dialog>
+  
 </template>
 
 <style scoped>

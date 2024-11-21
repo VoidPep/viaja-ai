@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, UseGuards, Logger } from '@nestjs/common';
+import {Controller, Get, Post, Body, UseGuards, Logger, Param } from '@nestjs/common';
 import { RoteirosService } from '../services/roteiros/roteiros.service';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { GeminiService } from 'src/services/gemini/gemini.service';
@@ -33,9 +33,8 @@ export class RoteirosController {
     return roteiroCriado;
   }
 
-  @UseGuards(AuthGuard)
-  @Get("getByLoggedUser")
-  getByLoggedUser() {
-    // return this.roteirosService.getByLoggedUser();
+  @Get("getByLoggedUser/:id")
+  getByLoggedUser(@Param('id') id) {
+    return this.roteirosService.getByLoggedUser(id);
   }
 }

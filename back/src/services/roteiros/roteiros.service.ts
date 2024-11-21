@@ -11,6 +11,15 @@ export class RoteirosService {
   ) {
     this.repository = this.database.getRepository(Roteiro);
   }
+
+  async getByLoggedUser(id: any) {
+    return await this.repository.find({
+      where: {
+        usuario: { id: id },
+      },
+      relations: ['usuario'],
+    });
+  }
   
   async create(roteiro: any) {
     return await this.repository.save(roteiro)
