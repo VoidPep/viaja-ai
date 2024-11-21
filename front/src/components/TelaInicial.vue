@@ -90,8 +90,8 @@ const idUsuario = usuario.id
 
 if(currentQuestionIndex.value === perguntas.value.length - 1) {
   const form = {
-    data_inicial: dataInicial.value.toISOString(),
-    data_final: dataFinal.value.toISOString(),
+    data_inicial: (dataInicial.value ?? new Date()).toISOString(),
+    data_final: (dataFinal.value ?? new Date()).toISOString(),
     orcamento: rangeValue.value,
     preferencias: selectedAnswer.value,
     idUsuario: idUsuario
@@ -102,6 +102,7 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
   if(response.data) {
     const dataFim =formatDate(new Date(response.data.dataFim))
     const dataInicio =formatDate(new Date(response.data.dataInicio))
+
     const novo = {
       id: response.data.id,
       custo_total_estimado: response.data.custo_total_estimado,
@@ -423,10 +424,10 @@ const viagemSelecionada = ref(null)
         <strong>{{ viagemSelecionada.conteudo.passagens_aereas.origem }}</strong> para 
         <strong>{{ viagemSelecionada.conteudo.passagens_aereas.destino }}</strong> - 
         Companhia: {{ viagemSelecionada.conteudo.passagens_aereas.companhia_aerea }}<br />
-        Ida: {{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_ida }} 
+        Ida: {{ formatDate(new Date(viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_ida)) }} 
         ({{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_ida }})<br />
         Volta: {{ formatDate(new Date(viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.data_volta)) }} 
-        ({{ formatDate(new Date(viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_volta)) }})<br />
+        ({{ viagemSelecionada.conteudo.passagens_aereas.detalhes_voo.duracao_voo_volta }})<br />
         Custo total: {{ formatCurrency(viagemSelecionada.conteudo.passagens_aereas.custo_total) }}
       </p>
     <div class="flex justify-content-end gap-2">
