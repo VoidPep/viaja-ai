@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 @Injectable()
@@ -16,7 +16,6 @@ export class GeminiService {
             if (match && match[1]) {
                 let jsonString = match[1];
 
-                // Remover comentários do JSON
                 jsonString = jsonString.replace(/\/\/.*$/gm, '').trim();
                 
                 try {

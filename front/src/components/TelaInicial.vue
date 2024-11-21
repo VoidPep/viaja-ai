@@ -1,5 +1,5 @@
 <script setup>
-import {onUnmounted, onMounted, ref} from 'vue';
+import {onUnmounted, onMounted, ref, inject} from 'vue';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
@@ -7,7 +7,11 @@ import Slider from "primevue/slider";
 import Calendar from 'primevue/calendar';
 import { useRouter } from 'vue-router';
 import http from '@/http/http';
-import { Card } from 'primevue/card';
+
+const {
+  setLoading,
+  message
+} = inject("loading")
 
 const formatCurrency = (value) => {
   if (typeof value !== 'number') return 'N/A';
@@ -97,30 +101,40 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
     idUsuario: idUsuario
   }
   
-  const response = await http.post('roteiros/gerar-viagem', form)
-  
-  if(response.data) {
-    const dataFim =formatDate(new Date(response.data.dataFim))
-    const dataInicio =formatDate(new Date(response.data.dataInicio))
+  setLoading(true)
+  message.value = "Estamos preparando sua viagem."; 
+  try{
 
-    const novo = {
-      id: response.data.id,
-      custo_total_estimado: response.data.custo_total_estimado,
-      dataFim: dataFim,
-      dataInicio: dataInicio,
-      destino: response.data.destino,
-      conteudo: JSON.parse(response.data.json)
+    const response = await http.post('roteiros/gerar-viagem', form)
+    
+    if(response.data) {
+      const dataFim =formatDate(new Date(response.data.dataFim))
+      const dataInicio =formatDate(new Date(response.data.dataInicio))
+
+      const novo = {
+        id: response.data.id,
+        custo_total_estimado: response.data.custo_total_estimado,
+        dataFim: dataFim,
+        dataInicio: dataInicio,
+        destino: response.data.destino,
+        conteudo: JSON.parse(response.data.json)
+      }
+
+      viagensGeradasDoUsuario.value.push(novo)
+
+      viagemSelecionada.value = novo
+      dialogVisualizarViagem.value = true
+
+      dataInicial.value = null;
+      dataFinal.value = null;
+      rangeValue.value = 500;
+      selectedAnswer.value = [];
     }
+    
+  }catch(e) {
 
-    viagensGeradasDoUsuario.value.push(novo)
-
-    viagemSelecionada.value = novo
-    dialogVisualizarViagem.value = true
-
-    dataInicial.value = null;
-    dataFinal.value = null;
-    rangeValue.value = 500;
-    selectedAnswer.value = [];
+  } finally {
+    setLoading(false)
   }
   currentQuestionIndex.value = 0
 

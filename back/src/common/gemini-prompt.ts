@@ -13,9 +13,14 @@ const promptGemini = function (request: PromptRequest): string {
         as seguintes categorias:
         ${preferencias.join(', ')}.
         Tenho um orçamento de até ${orcamento}.
-        Realize a busca utilizando APIs externas de viagens (Google Travel, Skyscanner, etc.) para encontrar pacotes ou
-        passagens e hospedagens que correspondam ao orçamento.
 
+        Imagine que você é uma ferramenta que faz buscas de viagens e busque pacotes, hospedagens, passagens que correspondam as 
+        categorias de preferencia e ao orçamento. 
+        Leve em consideração que: 
+        Orçamentos muito baixos são lugares mais proximos do brasil.
+        Quanto maior o orçamento mais facil é pra viajar para outros países.
+        Leve em consideração também as categorias
+        
         Envie as informações em um json com este seguinte formato, detalhe não adicione comentarios nesse json pois sera convertido:
         {
           "destino": {

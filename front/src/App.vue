@@ -1,7 +1,9 @@
 <script setup>
 import {provide, ref} from "vue";
+import LoadingScreen from "./components/LoadingScreen.vue";
 
 const loading = ref(false)
+const message = ref("")
 const setLoading = function (v = null) {
   if (v) { loading.value = v; return }
 
@@ -10,11 +12,13 @@ const setLoading = function (v = null) {
 
 provide("loading", {
   loading,
+  message,
   setLoading
 })
 </script>
 
 <template>
+  <LoadingScreen />
   <router-view></router-view>
 </template>
 
