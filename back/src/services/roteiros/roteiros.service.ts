@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoteiroDto } from '../../modules/roteiros/dto/create-roteiro.dto';
-import { UpdateRoteiroDto } from '../../modules/roteiros/dto/update-roteiro.dto';
-import { Roteiro } from '../../modules/roteiros/entities/roteiro.entity';
+import { Roteiro } from '../../modules/roteiros/entity/roteiro.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
@@ -12,24 +11,20 @@ export class RoteirosService {
   ) {
     this.repository = this.database.getRepository(Roteiro);
   }
+
+  async getByLoggedUser(id: any) {
+    return await this.repository.find({
+      where: {
+        usuario: { id: id },
+      },
+      relations: ['usuario'],
+    });
+  }
   
-  create(createRoteiroDto: CreateRoteiroDto) {
-    return 'This action adds a new roteiro';
+  async create(roteiro: any) {
+    return await this.repository.save(roteiro)
   }
-
-  findAll() {
-    return `This action returns all roteiros`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} roteiro`;
-  }
-
-  update(id: number, updateRoteiroDto: UpdateRoteiroDto) {
-    return `This action updates a #${id} roteiro`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} roteiro`;
+  async remove(id: number) {
+    return await this.repository.delete(id)
   }
 }

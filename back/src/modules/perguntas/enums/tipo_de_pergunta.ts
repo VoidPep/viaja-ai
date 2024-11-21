@@ -3,5 +3,6 @@ export enum TipoDePergunta {
     TEXT_INPUT = "text_input",
     RADIO = "radio",
     CHECKBOX = "checkbox",
+    DATE = "date",
 }
 

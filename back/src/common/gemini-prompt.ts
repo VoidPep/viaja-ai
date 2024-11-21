@@ -1,44 +1,45 @@
-import {PromptRequest} from "../modules/gemini/gemini.request";
+import { PromptRequest } from "../modules/gemini/gemini.request";
 
 const promptGemini = function (request: PromptRequest): string {
-    const {
-        destinos_preferidos,
-        mes_viagem,
-        atividades,
-        preferencias_acomodacao,
-        orcamento,
-    } = {...request};
+  const {
+    data_final,
+    data_inicial,
+    orcamento,
+    preferencias,
+  } = { ...request };
 
-    return `
-        Eu gostaria de planejar uma viagem para ${destinos_preferidos} no período de ${mes_viagem}. Prefiro destinos com
-        ${atividades}, ${preferencias_acomodacao}.
+  return `
+        Eu gostaria de planejar uma viagem no período de ${data_inicial} a ${data_final}. Prefiro destinos com
+        as seguintes categorias:
+        ${preferencias.join(', ')}.
         Tenho um orçamento de até ${orcamento}.
-        Realize a busca utilizando APIs externas de viagens (Google Travel, Skyscanner, etc.) para encontrar pacotes ou
-        passagens e hospedagens que correspondam ao orçamento.
 
-        Envie as informações em um json com este seguinte formato:
+        Imagine que você é uma ferramenta que faz buscas de viagens e busque pacotes, hospedagens, passagens que correspondam as 
+        categorias de preferencia e ao orçamento. 
+        Leve em consideração que: 
+        Orçamentos muito baixos são lugares mais proximos do brasil.
+        Quanto maior o orçamento mais facil é pra viajar para outros países.
+        Leve em consideração também as categorias
+        
+        Envie as informações em um json com este seguinte formato, detalhe não adicione comentarios nesse json pois sera convertido:
         {
           "destino": {
-            "países_sugeridos": ["", ""],
-            "cidades_sugeridas": ["", ""]
+            "cidade": "",
+            "pais": ""
           },
-          "detalhes_viagem": {
-            "data_inicio": "",
-            "data_fim": "",
-            "total_dias":
-          },
+          "data_inicio": "",
+          "data_fim": "",
+          "total_dias":
           "atividades_recomendadas": [
             {
-              "cidade": "",
               "atividade": "",
               "custo_estimado": ,
-              "descrição": ""
+              "descricao": ""
             },
             {
-              "cidade": "",
               "atividade": "",
               "custo_estimado": ,
-              "descrição": ""
+              "descricao": ""
             }
           ],
           "hospedagem": [
@@ -47,14 +48,16 @@ const promptGemini = function (request: PromptRequest): string {
               "hotel": "",
               "estrelas": ,
               "noites": ,
+              "custo_por_noite": 
               "custo_total":
-            },
-            {
-              "cidade": "",
-              "hotel": "",
-              "estrelas": ,
-              "noites": ,
-              "custo_total":
+              },
+              {
+                "cidade": "",
+                "hotel": "",
+                "estrelas": ,
+                "noites": ,
+                "custo_por_noite": 
+                "custo_total":
             }
           ],
           "passagens_aereas": {
@@ -74,4 +77,4 @@ const promptGemini = function (request: PromptRequest): string {
         `
 }
 
-export {promptGemini}
+export { promptGemini }

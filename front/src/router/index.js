@@ -14,13 +14,18 @@ const routes = [
     component: () => import('@/components/CadastroUsuario.vue')
   },
   {
+    path: '/planos',
+    name: 'planos',
+    meta: { title: 'Planos' },
+    component: () => import('@/components/Planos.vue')
+  },
+  {
     path: '/logout',
     name: 'logout',
     beforeEnter: async (to, from, next) => {
         localStorage.removeItem('user');
 
         next('/login');
-      
     },
   },
 
@@ -31,13 +36,13 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   const user = localStorage.getItem("user");
+router.beforeEach((to, from, next) => {
+  const user = localStorage.getItem("user");
 
-//   if (!user && to.path != '/login')
-//     next('/login')
+  if (!user && to.path != '/login')
+    next('/login')
 
-//   next();
-// })
+  next();
+})
 
 export default router

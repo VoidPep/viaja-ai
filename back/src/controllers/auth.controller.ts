@@ -16,4 +16,9 @@ export class AuthController {
     async login(@Body() body: LoginRequest) {
         return await this.authService.login(body);
     }
+
+    @Post('ativar-plano')
+    async ativarPlano(@Body() body: any) {
+        return await this.authService.ativarPlano(body);
+    }
 }
