@@ -8,13 +8,15 @@ import { ImagemDoRoteiro } from 'src/modules/roteiros/entity/imagem-do-roteiro.e
 @Injectable()
 export class RoteirosService {
   roteiroRepository: Repository<Roteiro>;
+  imagemRepository: Repository<ImagemDoRoteiro>;
   constructor(
     @Inject("DATA_SOURCE") private readonly database: DataSource,
   ) {
     this.roteiroRepository = this.database.getRepository(Roteiro);
+    this.imagemRepository = this.database.getRepository(ImagemDoRoteiro);
   }
 
-  async criarImagens(roteiro: any, request: PromptRequest) {
+  async criarImagens(roteiro: any, request: PromptRequest) : Promise<string[]> {
     const api = createApi({
       accessKey: "Client-ID qdp3gIWjG86yEIksq7zyneUSxEEh7sv-Ypzg1eo7Jko"
     });
@@ -30,9 +32,16 @@ export class RoteirosService {
      })
 
      let links = response.results.map(r => r.links.html)
-     let imagens: ImagemDoRoteiro[] = [];
-     links.forEach(link => {
-      imagens.push({ url: link } as ImagemDoRoteiro)
+     let imagens: string[] = [];
+     links.forEach(async link => {
+      const imagem = { 
+        url: link, 
+        roteiro: roteiro
+      } as ImagemDoRoteiro
+
+      await this.imagemRepository.save(imagem)
+
+      imagens.push(link)
      })
 
      return imagens
@@ -43,7 +52,7 @@ export class RoteirosService {
       where: {
         usuario: { id: id },
       },
-      relations: ['usuario'],
+      relations: [`usuario`, `imagens`],
     });
   }
 

@@ -9,7 +9,7 @@ export class ImagemDoRoteiro {
     @Column()
     url: string;
 
-    @ManyToOne(() => Roteiro, roteiro => roteiro.imagens)
+    @ManyToOne(() => Roteiro, (roteiro) => roteiro.imagens)
     @JoinColumn({ name: 'idRoteiro' })
     roteiro: Roteiro;
 }

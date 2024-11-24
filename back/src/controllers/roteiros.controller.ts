@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Param, Delete, Logger } from '@nestjs/common';
 import { RoteirosService } from '../services/roteiros/roteiros.service';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { GeminiService } from 'src/services/gemini/gemini.service';
@@ -20,7 +20,7 @@ export class RoteirosController {
     const prompt = promptGemini(request)
   
     const viagemGerada = await this.geminiService.getResponse(prompt);
-    const usuario = await this.userService.findOne(request.idUsuario)
+    const {senha, ...usuario} = await this.userService.findOne(request.idUsuario)
 
     let roteiro = {
       dataInicio: viagemGerada.data_inicio,
@@ -32,17 +32,16 @@ export class RoteirosController {
       imagens: []
     };
 
-    roteiro.imagens = await this.roteirosService.criarImagens(roteiro, request as PromptRequest);
-
     const roteiroCriado = await this.roteirosService.create(roteiro)
-
+    roteiroCriado.imagens = await this.roteirosService.criarImagens(roteiroCriado, request as PromptRequest);
+    
     return roteiroCriado;
   }
 
   @Get("getByLoggedUser/:id")
   getByLoggedUser(@Param('id') id) {
     return this.roteirosService.getByLoggedUser(id);
-  }
+  }s
   
   @Delete(":id")
   delete(@Param('id') id) {
