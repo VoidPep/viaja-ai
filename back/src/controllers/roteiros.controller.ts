@@ -4,6 +4,8 @@ import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { GeminiService } from 'src/services/gemini/gemini.service';
 import { promptGemini } from 'src/common/gemini-prompt';
 import { UsuarioService } from 'src/services/account/user.service';
+import { PromptRequest } from 'src/modules/gemini/gemini.request';
+import { ImagemDoRoteiro } from 'src/modules/roteiros/entity/imagem-do-roteiro.entity';
 
 @Controller('roteiros')
 export class RoteirosController {
@@ -20,14 +22,18 @@ export class RoteirosController {
     const viagemGerada = await this.geminiService.getResponse(prompt);
     const usuario = await this.userService.findOne(request.idUsuario)
 
-    var roteiro = {
+    let roteiro = {
       dataInicio: viagemGerada.data_inicio,
       dataFim: viagemGerada.data_fim,
       destino: `${viagemGerada.destino.cidade} - ${viagemGerada.destino.pais}`,
       custo_total_estimado: viagemGerada.custo_total_estimado,
       json: JSON.stringify(viagemGerada),
-      usuario: usuario
-    }
+      usuario: usuario,
+      imagens: []
+    };
+
+    roteiro.imagens = await this.roteirosService.criarImagens(roteiro, request as PromptRequest);
+
     const roteiroCriado = await this.roteirosService.create(roteiro)
 
     return roteiroCriado;
