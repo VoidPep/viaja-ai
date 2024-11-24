@@ -8,6 +8,12 @@ const routes = [
     component: () => import('@/components/TelaInicial.vue')
   },
   {
+    path: '/home',
+    name: 'home',
+    meta: { title: 'Viaja-ai' },
+    component: () => import('@/components/Home.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     meta: { title: 'Login' },
@@ -36,13 +42,13 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const user = localStorage.getItem("user");
+// router.beforeEach((to, from, next) => {
+//   const user = localStorage.getItem("user");
 
-  if (!user && to.path != '/login')
-    next('/login')
+//   if (!user && to.path != '/login')
+//     next('/login')
 
-  next();
-})
+//   next();
+// })
 
 export default router
