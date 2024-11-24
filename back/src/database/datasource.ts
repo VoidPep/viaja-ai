@@ -12,7 +12,7 @@ export default new DataSource({
     ],
     synchronize: true,
     migrations: [
-        __dirname + '/../migrations/*{.ts,.js}'
+        __dirname + '/../migrations-prod/*{.ts,.js}'
     ],
     extra: {
         ssl: {
