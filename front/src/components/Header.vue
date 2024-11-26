@@ -5,10 +5,10 @@
 <template>
     <header class="site-header container">
       <div class="logo">
-        <img src="/logo.png" alt="Logo" />
+        <img src="@/assets/images/logo-simplificada.png" alt="Logo" />
       </div>
       <nav class="nav-buttons">
-        <router-link to="/sobre" class="text-button">Sobre</router-link>
+        <a href="#sobre" class="text-button">Sobre</a>
         <router-link to="/assinaturas" class="text-button">Assinaturas</router-link>
         <router-link to="/login" class="styled-button">Login</router-link>
       </nav>
@@ -29,8 +29,8 @@
   }
   
   .logo img {
-    height: 40px;
-  }
+    height: 50px;
+    width: 130px;  }
   
   .nav-buttons {
     display: flex;
@@ -46,11 +46,12 @@
   }
   
   .styled-button {
+    transition: 0.1s all linear;
     text-decoration: none;
     color: white;
     background-color: #004aad;
     padding: 10px 32px;
-    border-radius: 15px;
+    border-radius: 10px;
     font-size: 16px;
   }
   .styled-button:hover {

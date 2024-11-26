@@ -107,7 +107,7 @@ onMounted(() => {
 <template>
   <div class="background-image h-screen">
     <div class="grid grid-nogutter">
-      <div class="col-6 bg-black-alpha-40 card-shadow">
+      <div class="col-12 lg:col-6 bg-black-alpha-40 card-shadow">
         <div class="h-screen">
           <div class="p-5rem">
             <transition name="fade" mode="out-in">
@@ -135,7 +135,6 @@ onMounted(() => {
                   </div>
                 </form>
               </div>
-
               <div v-else key="register-card">
 
                 <img :src="viajaAiLogoPath" alt="Logo viaja ai" class="logo" />
