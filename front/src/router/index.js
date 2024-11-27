@@ -20,6 +20,12 @@ const routes = [
     component: () => import('@/components/CadastroUsuario.vue')
   },
   {
+    path: '/pagamento',
+    name: 'tela-pagamento',
+    meta: { title: 'Pagamento' },
+    component: () => import('@/components/TelaPagamento.vue')
+  },
+  {
     path: '/planos',
     name: 'planos',
     meta: { title: 'Planos' },
