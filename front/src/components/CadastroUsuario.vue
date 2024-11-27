@@ -174,8 +174,8 @@ onMounted(() => {
 
 <style scoped>
 .logo {
-  width: 130px;
-  height: auto;
+  width: 180px;
+  height: 65px;
 }
 
 .background-image {

@@ -30,7 +30,8 @@
   
   .logo img {
     height: 50px;
-    width: 130px;  }
+    width: 130px;
+  }
   
   .nav-buttons {
     display: flex;

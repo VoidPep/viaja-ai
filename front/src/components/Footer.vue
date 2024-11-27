@@ -60,6 +60,11 @@
     flex-wrap: wrap;
   }
 
+  .footer-text img {
+      width: 130px;
+      height: 50px;
+    }
+
   .footer-text h4,
   .footer-links h4,
   .footer-social h4 {
