@@ -15,7 +15,9 @@ export class StripeController {
   @Post('/checkout')
   async checkout(@Res() res: Response) {
     const session = await this.stripeService.createCheckoutSession();
-    res.redirect(session.url);
+    
+    res.send(session.id)
+    // res.redirect(session.url);
   }
 
   @Get('/complete')

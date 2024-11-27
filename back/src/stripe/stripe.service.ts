@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -6,19 +6,23 @@ export class StripeService {
   private stripe: Stripe;
 
   constructor() {
-    const stripe = require('stripe')('sk_test_Ho24N7La5CVDtbmpjc377lJI', {
-        apiVersion: '2024-11-20.acacia',
-      });
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+      apiVersion: '2024-11-20.acacia',
+    });
   }
 
   async createCheckoutSession() {
-    return this.stripe.checkout.sessions.create({
+    const baseUrl = process.env.API_URL ?? "http://0.0.0.0:3000/"
+
+    const successUrl = `${baseUrl}/complete?session_id=`
+
+    const response = await this.stripe.checkout.sessions.create({
       line_items: [
         {
           price_data: {
             currency: 'usd',
             product_data: { name: 'Node.js and Express book' },
-            unit_amount: 50 * 100,
+            unit_amount: 1,
           },
           quantity: 1,
         },
@@ -33,9 +37,12 @@ export class StripeService {
       ],
       mode: 'payment',
       shipping_address_collection: { allowed_countries: ['US', 'BR'] },
-      success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/cancel`,
+      success_url: `${successUrl}{CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/cancel`,
     });
+
+    return response
+    // return response.id 
   }
 
   async retrieveSession(sessionId: string) {
