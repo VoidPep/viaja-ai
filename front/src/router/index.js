@@ -43,6 +43,13 @@ const routes = [
     },
     allowAnnonymous: true
   },
+  {
+    path: '/termos-de-uso',
+    name: 'Termos de uso',
+    meta: { title: 'Termos de uso' },
+    component: () => import('@/components/TermosDeUso.vue'),
+    allowAnnonymous: true
+  }
 
 ]
 

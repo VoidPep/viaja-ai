@@ -5,7 +5,7 @@
 <template>
     <header class="site-header container">
       <div class="logo">
-        <img src="@/assets/images/logo-simplificada.png" alt="Logo" />
+        <router-link to="/home"> <img src="@/assets/images/logo-simplificada.png" alt="Logo"/></router-link>
       </div>
       <nav class="nav-buttons">
         <a href="#sobre" class="text-button">Sobre</a>

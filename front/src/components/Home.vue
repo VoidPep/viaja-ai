@@ -204,6 +204,7 @@ import 'swiper/css';
     padding: 2rem;
     background-color: #f4f4f4; 
     border-radius: 15px;
+    margin-bottom: 1.5rem;
   }
 
   .info-text {

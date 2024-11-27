@@ -44,7 +44,6 @@
 
 
 .footer-container {
-    margin-top: 2rem;
     background-color: #1a2630; /* Tom mais suave de azul escuro */
     color: white;
     padding: 4rem 2rem;
