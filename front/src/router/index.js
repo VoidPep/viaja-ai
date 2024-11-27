@@ -11,7 +11,8 @@ const routes = [
     path: '/home',
     name: 'home',
     meta: { title: 'Viaja-ai' },
-    component: () => import('@/components/Home.vue')
+    component: () => import('@/components/Home.vue'),
+    allowAnnonymous: true
   },
   {
     path: '/login',
@@ -29,7 +30,8 @@ const routes = [
     path: '/planos',
     name: 'planos',
     meta: { title: 'Planos' },
-    component: () => import('@/components/Planos.vue')
+    component: () => import('@/components/Planos.vue'),
+    allowAnnonymous: true
   },
   {
     path: '/logout',
@@ -39,6 +41,7 @@ const routes = [
 
         next('/login');
     },
+    allowAnnonymous: true
   },
 
 ]
@@ -48,13 +51,22 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   const user = localStorage.getItem("user");
+router.beforeEach((to, from, next) => {
+  const user = localStorage.getItem("user");
 
-//   if (!user && to.path != '/login')
-//     next('/login')
+  const validate = validate(user, to)
+  
+  next();
+})
 
-//   next();
-// })
+function validate() {
+  if(to.path === "/home")
+    return null
+
+  if (!user && to.path != '/login' && !to.allowAnnonymous)
+    return "/login"
+
+  return null
+}
 
 export default router
