@@ -48,19 +48,19 @@ const router = createRouter({
 // router.beforeEach((to, from, next) => {
 //   const user = localStorage.getItem("user");
 
-  const validate = validate(user, to)
+//   const validate = validate(user, to)
   
-  next();
-})
+//   next();
+// })
 
-function validate() {
-  if(to.path === "/home")
-    return null
+// function validate() {
+//   if(to.path === "/home")
+//     return null
 
-  if (!user && to.path != '/login' && !to.allowAnnonymous)
-    return "/login"
+//   if (!user && to.path != '/login' && !to.allowAnnonymous)
+//     return "/login"
 
-  return null
-}
+//   return null
+// }
 
 export default router
