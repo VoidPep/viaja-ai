@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Query, Redirect, Res } from '@nestjs/common';
+import { Controller, Get, Post, Query, Redirect, Res, Body } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { Response } from 'express';
+import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto'; // Importando o DTO
 
 @Controller('stripe')
 export class StripeController {
@@ -15,8 +16,7 @@ export class StripeController {
   @Post('/checkout')
   async checkout(@Res() res: Response) {
     const session = await this.stripeService.createCheckoutSession();
-    
-    res.send(session.id)
+    res.send(session.id);
     // res.redirect(session.url);
   }
 
@@ -34,5 +34,16 @@ export class StripeController {
   @Redirect('/')
   cancel() {
     return { url: '/', statusCode: 302 };
+  }
+
+  // Rota para criar o Payment Intent
+  @Post('create-payment-intent')
+  async createPaymentIntent(
+    @Body() body: CreatePaymentIntentDto,  // Usando o DTO aqui
+    @Res() res: Response,
+  ) {
+    const { amount, currency } = body;
+    const paymentIntent = await this.stripeService.createPaymentIntent(amount, currency);
+    res.json(paymentIntent); // Retorna o client secret para o frontend
   }
 }

@@ -24,7 +24,7 @@ const routes = [
     path: '/pagamento',
     name: 'tela-pagamento',
     meta: { title: 'Pagamento' },
-    component: () => import('@/components/TelaPagamento.vue')
+    component: () => import('@/components/TelaPagamentoStrippe.vue')
   },
   {
     path: '/planos',

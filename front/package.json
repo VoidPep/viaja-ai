@@ -8,6 +8,7 @@
     "dev": "vue-cli-service serve"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^5.2.0",
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
     "font-awesome": "^4.7.0",
