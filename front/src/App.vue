@@ -10,6 +10,10 @@ const setLoading = function (v = null) {
   loading.value = !loading.value
 }
 
+provide("stripe", {
+  publish_key: import.meta.env.STRIPE_PUBLISH_KEY
+})
+
 provide("loading", {
   loading,
   message,

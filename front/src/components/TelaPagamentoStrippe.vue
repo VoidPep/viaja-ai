@@ -1,58 +1,54 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { loadStripe } from '@stripe/stripe-js';
+import { ref, onMounted, inject } from "vue";
+import { loadStripe } from "@stripe/stripe-js";
 
 const stripe = ref(null);
-const elements = ref(null);
-const paymentElement = ref(null);
-const isLoading = ref(false);
-const paymentStatus = ref(''); // 'success', 'error', ''
+const cardElement = ref(null);
+const isProcessing = ref(false);
+const errorMessage = ref("");
 
-// Função para carregar o Stripe e inicializar o Payment Element
+const { publish_key } = inject("stripe")
+
+// Inicializar Stripe e os elementos do cartão
 onMounted(async () => {
-  // Carregar a chave pública do Stripe (substitua pela sua chave pública)
-  stripe.value = await loadStripe('pk_test_51Q2MUS03TdZPkyxCD6Xwnv3ZLpw6MuKA4YwhzBbRNyXQ5DSgJC3OJIvuBOqLar7SZU80FvQ1RCSl9x1xBBj4dZxq009Oxs0XRd');
-  elements.value = stripe.value.elements();
+  stripe.value = await loadStripe(publish_key);
+
+  const elements = stripe.value.elements();
+  cardElement.value = elements.create("card");
+  cardElement.value.mount("#card-element");
 });
 
 // Função para processar o pagamento
-const processPayment = async (event) => {
-  event.preventDefault();
+const handlePayment = async () => {
+  isProcessing.value = true;
 
-  isLoading.value = true; // Inicia o estado de carregamento
-  paymentStatus.value = ''; // Reseta status anterior
+  try {
+    // Chamar o back-end para criar o PaymentIntent
+    const response = await fetch("/stripe/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        //userId e priceId do plano na stripe
+        // priceId deve vir por meio da url
+      }),
+    });
 
-  // Crie a intenção de pagamento no backend
-  const response = await fetch('/payment/create-payment-intent', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ amount: 4990, currency: 'BRL' }),
-  });
+    const { clientSecret } = await response.json();
+    const result = await stripe.value.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement.value,
+      },
+    });
 
-  const { clientSecret } = await response.json();
-
-  // Montar o Payment Element
-  paymentElement.value = elements.value.create('payment');
-  paymentElement.value.mount('#payment-element');
-
-  // Confirmar o pagamento
-  const { error, paymentIntent } = await stripe.value.confirmPayment({
-    elements: elements.value,
-    confirmParams: {
-      return_url: 'https://seusite.com/confirmacao-pagamento', // Substitua pelo seu URL de confirmação
-    },
-  });
-
-  isLoading.value = false;
-
-  if (error) {
-    paymentStatus.value = 'error';
-    alert('Ocorreu um erro ao processar o pagamento: ' + error.message);
-  } else if (paymentIntent.status === 'succeeded') {
-    paymentStatus.value = 'success';
-    alert('Pagamento realizado com sucesso!');
+    if (result.error) {
+      errorMessage.value = result.error.message;
+    } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+      alert("Pagamento realizado com sucesso!");
+    }
+  } catch (error) {
+    errorMessage.value = "Erro ao processar o pagamento.";
+  } finally {
+    isProcessing.value = false;
   }
 };
 </script>
@@ -79,8 +75,15 @@ const processPayment = async (event) => {
       </div>
     </div>
 
+    <div>
+      <div id="card-element"></div>
+      <button @click="handlePayment" :disabled="isProcessing">
+        {{ isProcessing ? "Processando..." : "Pagar" }}
+      </button>
+      <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
+    </div>
     <!-- Lado Direito -->
-    <div class="payment-form">
+    <!-- <div class="payment-form">
       <div class="content">
         <h2>Informações de Pagamento</h2>
 
@@ -98,24 +101,10 @@ const processPayment = async (event) => {
             <p>❌ Erro ao processar o pagamento. Tente novamente.</p>
           </div>
 
-          <div v-if="!isLoading && !paymentStatus">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input id="email" type="email" v-model="email" placeholder="seuemail@exemplo.com" required />
-            </div>
-
-            <h3>Método de Pagamento</h3>
-            <div id="payment-element"></div> <!-- Stripe Payment Element será montado aqui -->
-
-            <div class="terms">
-              <input type="checkbox" id="terms" v-model="acceptTerms" />
-              <label for="terms">Eu aceito os <a href="#">termos de uso</a>.</label>
-            </div>
-            <button type="submit" class="submit-button">Confirmar Pagamento</button>
-          </div>
+          
         </form>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
