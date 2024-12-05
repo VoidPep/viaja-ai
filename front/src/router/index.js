@@ -49,6 +49,13 @@ const routes = [
     meta: { title: 'Termos de uso' },
     component: () => import('@/components/TermosDeUso.vue'),
     allowAnnonymous: true
+  },
+  {
+    path: '/configuracoes',
+    name: 'Configurações',
+    meta: { title: 'Configurações' },
+    component: () => import('@/components/Configuracoes.vue'),
+    allowAnnonymous: true
   }
 
 ]
