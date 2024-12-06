@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripe = ref(null);
@@ -7,14 +7,30 @@ const cardElement = ref(null);
 const isProcessing = ref(false);
 const errorMessage = ref("");
 
-const { publish_key } = inject("stripe")
-
 // Inicializar Stripe e os elementos do cartão
 onMounted(async () => {
-  stripe.value = await loadStripe(publish_key);
+  stripe.value = await loadStripe("pk_test_51Q2MUS03TdZPkyxCD6Xwnv3ZLpw6MuKA4YwhzBbRNyXQ5DSgJC3OJIvuBOqLar7SZU80FvQ1RCSl9x1xBBj4dZxq009Oxs0XRd");
 
   const elements = stripe.value.elements();
-  cardElement.value = elements.create("card");
+  // Adicionando estilo ao elemento do cartão
+  cardElement.value = elements.create("card", {
+    style: {
+      base: {
+        color: "#32325d", // Cor do texto
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px", // Tamanho da fonte
+        "::placeholder": {
+          color: "#aab7c4", // Cor do texto de placeholder
+        },
+      },
+      invalid: {
+        color: "#fa755a", // Cor do texto em caso de erro
+        iconColor: "#fa755a", // Cor do ícone em caso de erro
+      },
+    },
+    hidePostalCode: true, // Opcional: oculta o campo de código postal
+  });
+
   cardElement.value.mount("#card-element");
 });
 
@@ -24,16 +40,18 @@ const handlePayment = async () => {
 
   try {
     // Chamar o back-end para criar o PaymentIntent
-    const response = await fetch("/stripe/create-payment-intent", {
+    const response = await fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        //userId e priceId do plano na stripe
-        // priceId deve vir por meio da url
+        amount: 2000, // Valor em centavos ($20,00)
+        currency: "usd",
       }),
     });
 
     const { clientSecret } = await response.json();
+
+    // Confirmar o pagamento
     const result = await stripe.value.confirmCardPayment(clientSecret, {
       payment_method: {
         card: cardElement.value,
@@ -41,6 +59,7 @@ const handlePayment = async () => {
     });
 
     if (result.error) {
+      // Exibir erros
       errorMessage.value = result.error.message;
     } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
       alert("Pagamento realizado com sucesso!");
