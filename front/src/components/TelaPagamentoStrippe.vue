@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
+import Card from "primevue/card"
 
 const stripe = ref(null);
 const cardElement = ref(null);
@@ -28,7 +29,7 @@ onMounted(async () => {
         iconColor: "#fa755a", // Cor do ícone em caso de erro
       },
     },
-    hidePostalCode: true, // Opcional: oculta o campo de código postal
+    hidePostalCode: false, // Opcional: oculta o campo de código postal
   });
 
   cardElement.value.mount("#card-element");
@@ -73,9 +74,29 @@ const handlePayment = async () => {
 </script>
 
 <template>
-  <div class="payment-container">
+  <div class="">
     <!-- Lado Esquerdo -->
-    <div class="summary">
+    <div class="summary gap-8 h-screen">
+      <Card class="w-26rem">
+          <template #title>Credenciais</template>
+          <template #content>
+            <div class="flex flex-column">
+              <form @submit.prevent="handlePayment">
+                <!-- Div onde o elemento do cartão será montado -->
+                <div id="card-element" class="card-input"></div>
+
+                <!-- Botão para processar o pagamento -->
+                <button :disabled="isProcessing" class="pay-button">
+                  {{ isProcessing ? "Processando..." : "Pagar" }}
+                </button>
+
+                <!-- Mensagem de erro -->
+                <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+              </form>
+            </div>
+          </template>
+      </Card>
+
       <div class="content">
         <img class="logo" src="@/assets/images/logo-simplificada.png" />
         <h2>Assinatura Viaja-AI</h2>
@@ -93,14 +114,7 @@ const handlePayment = async () => {
         </div>
       </div>
     </div>
-
-    <div>
-      <div id="card-element"></div>
-      <button @click="handlePayment" :disabled="isProcessing">
-        {{ isProcessing ? "Processando..." : "Pagar" }}
-      </button>
-      <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
-    </div>
+    
     <!-- Lado Direito -->
     <!-- <div class="payment-form">
       <div class="content">
@@ -278,5 +292,55 @@ const handlePayment = async () => {
 
 .error-message {
   color: #dc3545;
+}
+
+.payment-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.card-input {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.pay-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pay-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #fa755a;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.gap-8 {
+    gap: 9rem !important;
 }
 </style>
