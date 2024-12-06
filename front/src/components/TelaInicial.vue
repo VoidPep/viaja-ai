@@ -275,7 +275,7 @@ const viagemSelecionada = ref(null)
     <div class="grid grid-nogutter">
       <div class="h-screen sidebar-totalArea" v-if="sidebarVisible">
         <div class="flex justify-content-between">
-          <i class="pi pi-arrow-circle-left icones-hover cursor-pointer" @click="toggleSidebar()"
+          <i class="pi pi-arrow-circle-left azul icones-hover cursor-pointer" @click="toggleSidebar()"
              style="font-size: 1.2rem;"></i>
         </div>
         <div class="flex flex-column mt-4">
@@ -309,18 +309,23 @@ const viagemSelecionada = ref(null)
           </div>
         </div>
       </div>
-      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right icones-hover cursor-pointer" @click="toggleSidebar()"
+      <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right azul icones-hover cursor-pointer" @click="toggleSidebar()"
          style="font-size: 1.2rem; position: absolute; left: 1px; top: 1px ; padding: 1.5rem 1rem;"></i>
       <div class="user-button-area">
-        <div class="user-button" @click="toggleUserOption($event)"></div>
-        <div v-if="userOptionsVisible" class="options-menu"
-             style="margin-top: 80px; margin-right: 15px; min-width: 200px;">
-          <span class="flex flex-row">
-            <i class="pi pi-tag" style="font-size: 1rem; margin-right: 6px"></i>Opções
-          </span>
-          <span class="flex flex-row" style="color: var(--red-400)" @click="sair">
-            <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Sair
-          </span>
+        <div class="user-button" >
+          <div class="flex gap-2">
+            <Button severity="contrast" @click="router.push('/configuracoes')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+              </svg>
+            </Button>
+            <Button severity="danger" @click="router.push('/logout')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+              </svg>
+            </Button>
+          </div>
         </div>
       </div>
       <div class="h-screen" :class="{ 'chat-totalArea': sidebarVisible }"
@@ -383,11 +388,11 @@ const viagemSelecionada = ref(null)
         </div>
 
         <div class="flex justify-content-center mt-3 gap-3">
-          <Button :class="currentQuestionIndex === 0 ? 'text-gray' : 'text-white'" @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn"
-                  text raised/>
+          <Button class="botao-azul" :class="currentQuestionIndex === 0 ? 'text-gray' : 'text-white'" @click="goToPreviousQuestion" :disabled="currentQuestionIndex === 0" label="Anterior" severity="warn"
+                  raised/>
           <!-- <Button label="Não tenho preferência" severity="secondary" raised/> -->
-          <Button :class="'text-white'" @click="goToNextQuestion" :label="currentQuestionIndex === perguntas.length - 1 ? 'Finalizar' : 'Próximo'"
-                  severity="warn" text raised/>
+          <Button class="botao-azul" :class="'text-white'" @click="goToNextQuestion" :label="currentQuestionIndex === perguntas.length - 1 ? 'Finalizar' : 'Próximo'"
+                  severity="warn" raised/>
         </div>
         <div class="slider-container mt-5">
           <div class="slider-value">{{ sliderValue }}</div>
@@ -465,9 +470,13 @@ const viagemSelecionada = ref(null)
   background-position: bottom;
 }
 
+.azul {
+  color: #3d4b87
+}
+
 .icones-hover:hover {
   transition: 0.1s linear all;
-  color: #5271ff;
+  color: #374151;
 }
 
 .sidebar-totalArea {
@@ -623,10 +632,6 @@ const viagemSelecionada = ref(null)
   outline: none;
 }
 
-.chat-input-area button:hover {
-  
-}
-
 .chat-card-resposta {
   cursor: pointer;
   transition: 0.1s all linear;
@@ -654,11 +659,6 @@ const viagemSelecionada = ref(null)
 
 .user-button {
   cursor: pointer;
-  background-color: #000;
-  width: 50px;
-  height: 50px;
-  padding: 10px;
-  border-radius: 25px;
   position: absolute;
   right: 0;
   top: 0;
@@ -719,6 +719,15 @@ const viagemSelecionada = ref(null)
   .chat-card-resposta span {
     font-size: 1rem;
   }
+}
+
+.p-button {
+  color: white !important
+}
+
+.botao-azul {
+  background: #3d4b87;
+  border: 1px solid #3d4b87;
 }
 
 </style>
