@@ -11,7 +11,7 @@ const setLoading = function (v = null) {
 }
 
 provide("stripe", {
-  publish_key: import.meta.env.STRIPE_PUBLISH_KEY
+  publish_key: process.env.STRIPE_PUBLISH_KEY
 })
 
 provide("loading", {

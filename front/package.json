@@ -11,6 +11,7 @@
     "@stripe/stripe-js": "^5.2.0",
     "axios": "^1.7.7",
     "core-js": "^3.8.3",
+    "dotenv": "^16.4.7",
     "font-awesome": "^4.7.0",
     "primeflex": "^3.2.1",
     "primeicons": "^7.0.0",
