@@ -22,20 +22,20 @@ export class RoteirosController {
     const viagemGerada = await this.geminiService.getResponse(prompt);
     const {senha, ...usuario} = await this.userService.findOne(request.idUsuario)
 
-    let roteiro = {
-      dataInicio: viagemGerada.data_inicio,
-      dataFim: viagemGerada.data_fim,
-      destino: `${viagemGerada.destino.cidade} - ${viagemGerada.destino.pais}`,
-      custo_total_estimado: viagemGerada.custo_total_estimado,
-      json: JSON.stringify(viagemGerada),
-      usuario: usuario,
-      imagens: []
-    };
+    // let roteiro = {
+    //   dataInicio: viagemGerada.data_inicio,
+    //   dataFim: viagemGerada.data_fim,
+    //   destino: `${viagemGerada.destino.cidade} - ${viagemGerada.destino.pais}`,
+    //   custo_total_estimado: viagemGerada.custo_total_estimado,
+    //   json: JSON.stringify(viagemGerada),
+    //   usuario: usuario,
+    //   imagens: []
+    // };
 
-    const roteiroCriado = await this.roteirosService.create(roteiro)
-    roteiroCriado.imagens = await this.roteirosService.criarImagens(roteiroCriado, request as PromptRequest);
+    // const roteiroCriado = await this.roteirosService.create(roteiro)
+    // roteiroCriado.imagens = await this.roteirosService.criarImagens(roteiroCriado, request as PromptRequest);
     
-    return roteiroCriado;
+    return viagemGerada;
   }
 
   @Get("getByLoggedUser/:id")

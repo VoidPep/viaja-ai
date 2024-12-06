@@ -9,19 +9,20 @@ const promptGemini = function (request: PromptRequest): string {
   } = { ...request };
 
   return `
-        Eu gostaria de planejar uma viagem no período de ${data_inicial} a ${data_final}. Prefiro destinos com
+        Background: Vamos supor que você é um guia de turismo profissional que possui conhecimento de vários locais
+        culturas e consegue dizer uma viagem baseado na preferencia de alguém
+
+        Baseado nisso, eu gostaria de planejar uma viagem no período de ${data_inicial} a ${data_final}. Prefiro destinos com
         as seguintes categorias:
         ${preferencias.join(', ')}.
         Tenho um orçamento de até ${orcamento}.
 
-        Imagine que você é uma ferramenta que faz buscas de viagens e busque pacotes, hospedagens, passagens que correspondam as 
-        categorias de preferencia e ao orçamento. 
         Leve em consideração que: 
         Orçamentos muito baixos são lugares mais proximos do brasil.
         Quanto maior o orçamento mais facil é pra viajar para outros países.
         Leve em consideração também as categorias
         
-        Envie as informações em um json com este seguinte formato, detalhe não adicione comentarios nesse json pois sera convertido:
+        Envie as informações em um json com este seguinte formato, detalhe, não adicione comentarios nesse json pois o mesmo sera convertido posteriormente:
         {
           "destino": {
             "cidade": "",

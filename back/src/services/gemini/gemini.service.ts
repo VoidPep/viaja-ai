@@ -10,9 +10,11 @@ export class GeminiService {
 
             const result = await model.generateContent(prompt);
             const text = result.response.text();
+            // Logger.log(text)
             const match = text.match(/```json\s*({.*?})\s*```/s);
             
             let jsonObject = {};
+            Logger.log(match);
             if (match && match[1]) {
                 let jsonString = match[1];
 
@@ -21,7 +23,7 @@ export class GeminiService {
                 try {
                     jsonObject = JSON.parse(jsonString);
                 } catch (error) {
-                    console.error("Erro ao analisar JSON:", error);
+                    Logger.error("Erro ao analisar JSON:", error);
                     throw new HttpException("Erro ao analisar JSON", 500);
                 }
             } else {

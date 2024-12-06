@@ -164,7 +164,8 @@ async function getUserTrips() {
       dataFim: dataFim,
       dataInicio: dataInicio,
       destino: q.destino,
-      conteudo: JSON.parse(q.json)
+      conteudo: JSON.parse(q.json),
+      imagens: q.imagens
     }
   })
 }

@@ -5,7 +5,7 @@ const routes = [
     path: '/',
     name: 'tela-inicial',
     meta: { title: 'Viaja-ai' },
-    component: () => import('@/components/TelaInicial.vue')
+    component: () => import('@/components/GerarViagem.vue')
   },
   {
     path: '/home',
