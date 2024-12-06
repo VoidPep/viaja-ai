@@ -285,24 +285,30 @@ const viagemSelecionada = ref(null)
               <div v-for="viagem in viagensGeradasDoUsuario" :key="viagem.id" :class="{'item-fixado': viagem.fixado}"
                    class="item-viagemGerada cursor-pointer flex flex-row justify-content-between align-items-center">
                 <div class="flex flex-row justify-content-between w-full align-items-center" @click="abrirDialogViagemGerada(viagem)">
-                  <div class="topicos-viagemGerada">{{ viagem.destino }}</div>
                   <div class="topicos-viagemGerada flex flex-column">
-                    <span> {{ viagem.dataInicio }}</span>
-                    <span> {{ viagem.dataFim }}</span>
+                    <div>
+                      {{ viagem.destino }}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-fill" viewBox="0 0 16 16">
+                        <path d="M4.146.146A.5.5 0 0 1 4.5 0h7a.5.5 0 0 1 .5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 0 1-.5.5h-4v4.5c0 .276-.224 1.5-.5 1.5s-.5-1.224-.5-1.5V10h-4a.5.5 0 0 1-.5-.5c0-.973.64-1.725 1.17-2.189A6 6 0 0 1 5 6.708V2.277a3 3 0 0 1-.354-.298C4.342 1.674 4 1.179 4 .5a.5.5 0 0 1 .146-.354"/>
+                      </svg>
+                    </div>
+                    <div class="text-green-700">R$ {{ Number.parseFloat(viagem.custo_total_estimado).toFixed(2) }}</div>
+                  </div>
+                  <div class="topicos-viagemGerada flex flex-column">
+                    <span>
+                      <i class="pi pi-arrow-right"></i>
+                      {{ viagem.dataInicio }}
+                    </span>
+                    <span> 
+                      <i class="pi pi-arrow-left"></i>
+                      {{ viagem.dataFim }}
+                    </span>
                   </div>
                 </div>
-                <div class="itemEdit-area" style="position: relative;">
-                  <i class="btn-edit pi pi-ellipsis-v cursor-pointer" @click="toggleEditOptions($event, viagem.id)"></i>
-                  <div class="options-menu" v-if="editOptionsVisible[viagem.id]">
-                      <span class="flex flex-row"
-                            @click="viagem.fixado ? desafixarViagem(viagem.id) : fixarViagem(viagem.id)">
-                        <i class="pi pi-tag"
-                           style="font-size: 1rem; margin-right: 6px"></i>{{ viagem.fixado ? 'Desafixar' : 'Fixar' }}
-                      </span>
-                      <span class="flex flex-row" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
-                        <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>Deletar
-                      </span>
-                  </div>
+                <div class="flex gap-3 ml-3">
+                  <span class="flex" style="color: var(--red-400)" @click="deletarViagem(viagem.id)">
+                    <i class="pi pi-trash" style="font-size: 1rem; margin-right: 6px"></i>
+                  </span>
                 </div>
               </div>
             </div>
@@ -509,15 +515,15 @@ const viagemSelecionada = ref(null)
 .item-viagemGerada {
   font-size: 1rem;
   gap: 3px;
-  background-color: #dfdfdf;
+  background-color: #fefefe;
   margin-bottom: 20px;
-  padding: 20px 8px;
+  padding: 25px;
   border-radius: 10px;
   transition: 0.1s linear all;
 }
 
 .item-viagemGerada:hover {
-  background-color: #cacaca;
+  background-color: #ececf2;
 }
 
 .item-fixado {
