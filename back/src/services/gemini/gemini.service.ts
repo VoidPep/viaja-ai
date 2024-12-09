@@ -11,10 +11,10 @@ export class GeminiService {
             const result = await model.generateContent(prompt);
             const text = result.response.text();
             // Logger.log(text)
-            const match = text.match(/```json\s*({.*?})\s*```/s);
+            const match = text.match(/```json\s*(\[[\s\S]*?\])\s*```/);
             
             let jsonObject = {};
-            Logger.log(match);
+            // Logger.log(match);
             if (match && match[1]) {
                 let jsonString = match[1];
 

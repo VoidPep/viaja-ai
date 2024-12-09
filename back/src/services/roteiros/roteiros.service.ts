@@ -1,9 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Roteiro } from '../../modules/roteiros/entity/roteiro.entity';
 import { DataSource, Repository } from 'typeorm';
 import { createApi, Language } from "unsplash-js";
 import { PromptRequest } from 'src/modules/gemini/gemini.request';
 import { ImagemDoRoteiro } from 'src/modules/roteiros/entity/imagem-do-roteiro.entity';
+import { RoteiroResponse } from 'src/modules/roteiros/dto/roteiro.response';
 
 @Injectable()
 export class RoteirosService {
@@ -16,12 +17,14 @@ export class RoteirosService {
     this.imagemRepository = this.database.getRepository(ImagemDoRoteiro);
   }
 
-  async criarImagens(roteiro: any, request: PromptRequest) : Promise<string[]> {
+  async criarImagens(roteiros: RoteiroResponse[], request: PromptRequest): Promise<object[]> {
     const api = createApi({
       accessKey: "Client-ID qdp3gIWjG86yEIksq7zyneUSxEEh7sv-Ypzg1eo7Jko"
     });
+    for(let i = 0; i <= roteiros.length - 1; i++) {
+      let roteiro = roteiros[i]
 
-    const {response} = await api.search.getPhotos({ 
+      const { response } = await api.search.getPhotos({
         query: `
           ${roteiro.destino} 
           ${request.preferencias.join(', ').replace('_', ' ').toLowerCase()}
@@ -29,22 +32,19 @@ export class RoteirosService {
         orientation: 'landscape',
         lang: Language.Portuguese,
         perPage: 3
-     })
+      })
 
-     let links = response.results.map(r => r.links.html)
-     let imagens: string[] = [];
-     links.forEach(async link => {
-      const imagem = { 
-        url: link, 
-        roteiro: roteiro
-      } as ImagemDoRoteiro
+      let links = response.results.map(r => r.links.html)
+      links.forEach(async link => {
+        const imagem = {
+          url: link
+        }
 
-      await this.imagemRepository.save(imagem)
+        roteiro.imagens.push(imagem)
+      })
+    }
 
-      imagens.push(link)
-     })
-
-     return imagens
+    return roteiros
   }
 
   async getByLoggedUser(id: any) {

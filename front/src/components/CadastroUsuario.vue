@@ -1,5 +1,5 @@
 <script setup>
-import { Toast } from 'primevue/toast';
+import Toast from 'primevue/toast';
 import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
 import Button from "primevue/button";

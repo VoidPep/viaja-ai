@@ -6,6 +6,7 @@ import { promptGemini } from 'src/common/gemini-prompt';
 import { UsuarioService } from 'src/services/account/user.service';
 import { PromptRequest } from 'src/modules/gemini/gemini.request';
 import { ImagemDoRoteiro } from 'src/modules/roteiros/entity/imagem-do-roteiro.entity';
+import { RoteiroResponse } from 'src/modules/roteiros/dto/roteiro.response';
 
 @Controller('roteiros')
 export class RoteirosController {
@@ -19,29 +20,35 @@ export class RoteirosController {
   async gerarViagem(@Body() request:any) {
     const prompt = promptGemini(request)
   
-    const viagemGerada = await this.geminiService.getResponse(prompt);
-    const {senha, ...usuario} = await this.userService.findOne(request.idUsuario)
+    const viagensGeradas = await this.geminiService.getResponse(prompt);
+    // const {senha, ...usuario} = await this.userService.findOne(request.idUsuario)
 
-    // let roteiro = {
-    //   dataInicio: viagemGerada.data_inicio,
-    //   dataFim: viagemGerada.data_fim,
-    //   destino: `${viagemGerada.destino.cidade} - ${viagemGerada.destino.pais}`,
-    //   custo_total_estimado: viagemGerada.custo_total_estimado,
-    //   json: JSON.stringify(viagemGerada),
-    //   usuario: usuario,
-    //   imagens: []
-    // };
-
+    let roteiros = viagensGeradas.map(viagemGerada => {
+      let roteiro = {
+        dataInicio: viagemGerada.data_inicio,
+        dataFim: viagemGerada.data_fim,
+        destino: `${viagemGerada.destino.cidade} - ${viagemGerada.destino.pais}`,
+        custo_total_estimado: viagemGerada.custo_total_estimado,
+        json: JSON.stringify(viagemGerada),
+        imagens: []
+      } as RoteiroResponse;
+      
+      return roteiro
+    })
+    roteiros = await this.roteirosService.criarImagens(roteiros, request as PromptRequest)
     // const roteiroCriado = await this.roteirosService.create(roteiro)
-    // roteiroCriado.imagens = await this.roteirosService.criarImagens(roteiroCriado, request as PromptRequest);
-    
-    return viagemGerada;
+    const roteirosSanitizados = roteiros.map((roteiro) => {
+      const { usuario, ...roteiroSemUsuario } = roteiro;
+      return roteiroSemUsuario;
+    });
+
+    return { viagens: roteirosSanitizados };
   }
 
   @Get("getByLoggedUser/:id")
   getByLoggedUser(@Param('id') id) {
     return this.roteirosService.getByLoggedUser(id);
-  }s
+  }
   
   @Delete(":id")
   delete(@Param('id') id) {

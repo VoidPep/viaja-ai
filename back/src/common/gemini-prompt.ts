@@ -22,8 +22,9 @@ const promptGemini = function (request: PromptRequest): string {
         Quanto maior o orçamento mais facil é pra viajar para outros países.
         Leve em consideração também as categorias
         
+        Gere 3 viagens baseados na preferencia,
         Envie as informações em um json com este seguinte formato, detalhe, não adicione comentarios nesse json pois o mesmo sera convertido posteriormente:
-        {
+        [{
           "destino": {
             "cidade": "",
             "pais": ""
@@ -74,7 +75,7 @@ const promptGemini = function (request: PromptRequest): string {
             }
           },
           "custo_total_estimado":
-        }
+        }]
         `
 }
 

@@ -1,6 +1,7 @@
 <script setup>
 import {onUnmounted, onMounted, ref, inject} from 'vue';
 import Button from 'primevue/button';
+import ViagemGerada from './ViagemGerada.vue';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Slider from "primevue/slider";
@@ -12,6 +13,9 @@ const {
   setLoading,
   message
 } = inject("loading")
+
+const viagensGeradas = ref([]);
+const dialogDeOpcoesDeViagem = ref(false);
 
 const formatCurrency = (value) => {
   if (typeof value !== 'number') return 'N/A';
@@ -107,30 +111,36 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
 
     const response = await http.post('roteiros/gerar-viagem', form)
     
-    if(response.data) {
-      const dataFim =formatDate(new Date(response.data.dataFim))
-      const dataInicio =formatDate(new Date(response.data.dataInicio))
+    if(response.data && response.data.viagens) {
+      console.log(response.data)
+      
+      viagensGeradas.value = []
+      response.data.viagens.forEach(viagem => {
+        const dataFim =formatDate(new Date(viagem.dataFim))
+        const dataInicio =formatDate(new Date(viagem.dataInicio))
+        
+        const novo = {
+          id: viagem.id,
+          custo_total_estimado: viagem.custo_total_estimado,
+          dataFim: dataFim,
+          dataInicio: dataInicio,
+          destino: viagem.destino,
+          imanges: viagem.imagens,
+          conteudo: JSON.parse(viagem.json)
+        }
+        console.log(novo)
+        
+        viagensGeradas.value.push(novo)
+        
+        dialogDeOpcoesDeViagem.value = true
 
-      const novo = {
-        id: response.data.id,
-        custo_total_estimado: response.data.custo_total_estimado,
-        dataFim: dataFim,
-        dataInicio: dataInicio,
-        destino: response.data.destino,
-        conteudo: JSON.parse(response.data.json)
-      }
+        dataInicial.value = null;
+        dataFinal.value = null;
+        rangeValue.value = 500;
+        selectedAnswer.value = [];
+      });
 
-      viagensGeradasDoUsuario.value.push(novo)
-
-      viagemSelecionada.value = novo
-      dialogVisualizarViagem.value = true
-
-      dataInicial.value = null;
-      dataFinal.value = null;
-      rangeValue.value = 500;
-      selectedAnswer.value = [];
     }
-    
   }catch(e) {
 
   } finally {
@@ -210,6 +220,8 @@ function handleResize() {
 
 const viagensGeradasDoUsuario = ref([])
 onMounted(async () => {
+  viagensGeradas.value = []
+
   if (isMobile.value) {
     sidebarVisible.value = false;
   }
@@ -469,8 +481,18 @@ const viagemSelecionada = ref(null)
     <div class="flex justify-content-end gap-2">
         <Button type="button" label="Fechar" severity="secondary" @click="dialogVisualizarViagem = false"></Button>
     </div>
-</Dialog>
+
+  </Dialog>
   
+  <div>
+    <Dialog v-model:visible="dialogDeOpcoesDeViagem" modal header="Visualizar viagem gerada" :style="{ width: '80rem' }">
+      <div class="flex">
+        <div v-for="viagem in viagensGeradas">
+          <ViagemGerada :viagem="viagem"></ViagemGerada>
+        </div>
+      </div>
+    </Dialog>
+  </div>
 </template>
 
 <style scoped>
