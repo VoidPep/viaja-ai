@@ -1,75 +1,137 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from "vue";
+import { loadStripe } from "@stripe/stripe-js";
 
-const email = ref('');
-const cardNumber = ref('');
-const cardHolderName = ref('');
-const expirationDate = ref('');
-const cvv = ref('');
-const billingAddress = ref('');
-const acceptTerms = ref(false);
-const isLoading = ref(false);
-const paymentStatus = ref(''); // 'success', 'error', ''
+const stripe = ref(null);
+const cardNumberElement = ref(null);
+const cardExpiryElement = ref(null);
+const cardCvcElement = ref(null);
+const isProcessing = ref(false);
+const errorMessage = ref("");
 
-const processPayment = async () => {
-  if (!acceptTerms.value) {
-    alert('Por favor, aceite os termos de uso.');
-    return;
-  }
+// Inicializar Stripe e os elementos do cartão
+onMounted(async () => {
+  stripe.value = await loadStripe("pk_test_51Q2MUS03TdZPkyxCD6Xwnv3ZLpw6MuKA4YwhzBbRNyXQ5DSgJC3OJIvuBOqLar7SZU80FvQ1RCSl9x1xBBj4dZxq009Oxs0XRd");
 
-  isLoading.value = true; // Inicia o estado de carregamento
-  paymentStatus.value = ''; // Reseta status anterior
+  const elements = stripe.value.elements();
 
-  setTimeout(() => {
-    isLoading.value = false;
-    const success = Math.random() > 0.3; // Simula 70% de chance de sucesso
+  // Criar e montar os elementos do cartão
+  cardNumberElement.value = elements.create("cardNumber", {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  });
+  cardNumberElement.value.mount("#card-number-element");
 
-    if (success) {
-      paymentStatus.value = 'success';
-      alert('Pagamento realizado com sucesso!');
-    } else {
-      paymentStatus.value = 'error';
-      alert('Ocorreu um erro ao processar o pagamento.');
+  cardExpiryElement.value = elements.create("cardExpiry", {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  });
+  cardExpiryElement.value.mount("#card-expiry-element");
+
+  cardCvcElement.value = elements.create("cardCvc", {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  });
+  cardCvcElement.value.mount("#card-cvc-element");
+});
+
+// Função para processar o pagamento
+const handlePayment = async () => {
+  isProcessing.value = true;
+
+  try {
+    const response = await fetch("/api/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: 2000, // Valor em centavos ($20,00)
+        currency: "usd",
+      }),
+    });
+
+    const { clientSecret } = await response.json();
+
+    const result = await stripe.value.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: {
+          number: cardNumberElement.value,
+          expiry: cardExpiryElement.value,
+          cvc: cardCvcElement.value,
+        },
+      },
+    });
+
+    if (result.error) {
+      errorMessage.value = result.error.message;
+    } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+      alert("Pagamento realizado com sucesso!");
     }
-  }, 2000); // Simula o tempo de espera para processamento
-};
-
-const formatCardNumber = (value) => {
-  return value.replace(/\D/g, '') // Remove qualquer coisa que não seja número
-    .replace(/(\d{4})(\d)/, '$1 $2') // Adiciona espaço após 4 números
-    .replace(/(\d{4})(\d{4})(\d)/, '$1 $2 $3') // Adiciona espaço após 8 números
-    .replace(/(\d{4})(\d{4})(\d{4})(\d)/, '$1 $2 $3 $4') // Adiciona espaço após 12 números
-    .substring(0, 19); // Limita a 16 dígitos e 3 espaços
-};
-
-const formatExpirationDate = (value) => {
-  return value.replace(/\D/g, '') // Remove qualquer coisa que não seja número
-    .replace(/(\d{2})(\d)/, '$1/$2') // Formata com barra
-    .substring(0, 5); // Limita a 5 caracteres (MM/AA)
-};
-
-// Atualizando os valores com a formatação diretamente
-const handleCardNumberInput = (event) => {
-  cardNumber.value = formatCardNumber(event.target.value);
-};
-
-const handleExpirationDateInput = (event) => {
-  expirationDate.value = formatExpirationDate(event.target.value);
+  } catch (error) {
+    errorMessage.value = "Erro ao processar o pagamento.";
+  } finally {
+    isProcessing.value = false;
+  }
 };
 </script>
 
 <template>
-  <div class="payment-container">
-    <!-- Lado Esquerdo -->
-    <div class="summary">
-      <div class="content">
+  <div class="page-background">
+    <div class="payment-container">
+      <div class="credentials-card">
+        <h3>Pagamento com Cartão</h3>
+        <form @submit.prevent="handlePayment" class="credentials-form">
+          <div id="card-number-element" class="stripe-input"></div>
+          <div id="card-expiry-element" class="stripe-input"></div>
+          <div id="card-cvc-element" class="stripe-input"></div>
+          <button :disabled="isProcessing" class="pay-button">
+            {{ isProcessing ? "Processando..." : "Pagar" }}
+          </button>
+          <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+        </form>
+      </div>
+
+      <div class="summary">
         <img class="logo" src="@/assets/images/logo-simplificada.png" />
         <h2>Assinatura Viaja-AI</h2>
         <p><strong>R$49,90</strong> por mês</p>
         <ul>
           <li>Planejamento inteligente de viagens</li>
-          <li>Acesso a ferramentas premium</li>
-          <li>Suporte dedicado</li>
         </ul>
         <div class="total">
           <p>Subtotal: <span>R$49,90</span></p>
@@ -79,287 +141,132 @@ const handleExpirationDateInput = (event) => {
         </div>
       </div>
     </div>
-
-    <!-- Lado Direito -->
-    <div class="payment-form">
-      <div class="content">
-        <h2>Informações de Pagamento</h2>
-
-        <form @submit.prevent="processPayment">
-          <div v-if="isLoading" class="loading">
-            <div class="spinner"></div>
-            <p>Processando pagamento...</p>
-          </div>
-
-          <div v-else-if="paymentStatus === 'success'" class="success-message">
-            <p>🎉 Pagamento confirmado! Obrigado por assinar o Viaja-AI.</p>
-          </div>
-
-          <div v-else-if="paymentStatus === 'error'" class="error-message">
-            <p>❌ Erro ao processar o pagamento. Tente novamente.</p>
-          </div>
-
-          <div v-if="!isLoading && !paymentStatus">
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input id="email" type="email" v-model="email" placeholder="seuemail@exemplo.com" required />
-            </div>
-            <h3>Método de Pagamento</h3>
-            <div class="form-group">
-              <label for="card-number">Número do Cartão</label>
-              <input
-                id="card-number"
-                type="text"
-                :value="cardNumber"
-                @input="handleCardNumberInput"
-                maxlength="19" 
-                placeholder="1234 1234 1234 1234"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="card-holder-name">Nome no Cartão</label>
-              <input id="card-holder-name" type="text" v-model="cardHolderName" placeholder="João Silva" required />
-            </div>
-            <div class="form-row">
-              <div class="form-group" id="expiration-date">
-                <label for="expiration-date">Validade</label>
-                <input
-                  id="expiration-date"
-                  type="text"
-                  :value="expirationDate"
-                  @input="handleExpirationDateInput"
-                  maxlength="5"
-                  placeholder="MM/AA"
-                  required
-                />
-              </div>
-              <div class="form-group" id="cvv">
-                <label for="cvv">CVV</label>
-                <input
-                  id="cvv"
-                  type="text"
-                  v-model="cvv"
-                  maxlength="3"
-                  placeholder="123"
-                  required
-                />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="billing-address">Endereço de Cobrança</label>
-              <input
-                id="billing-address"
-                type="text"
-                v-model="billingAddress"
-                placeholder="Digite seu endereço"
-                required
-              />
-            </div>
-            <div class="terms">
-              <input type="checkbox" id="terms" v-model="acceptTerms" />
-              <label for="terms">Eu aceito os <a href="#">termos de uso</a>.</label>
-            </div>
-            <button type="submit" class="submit-button">Confirmar Pagamento</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </template>
 
 <style scoped>
+.page-background {
+  background: linear-gradient(135deg, #7bc4ff, #156fff);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 
 .payment-container {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  max-width: 1200px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.credentials-card,
+.summary {
+  flex: 1;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.credentials-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.credentials-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stripe-input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 16px;
+}
+
+.pay-button {
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.1s all linear;
+}
+
+.pay-button:hover {
+  background-color: #006ce0;
+}
+
+.pay-button:disabled {
+  background-color: #b8d8ff;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+.summary .logo {
+  max-width: 180px;
+  max-height: 80px;
+  margin-bottom: 25px;
+}
+
+.summary h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.summary ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.summary ul li {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.total {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.total p {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .payment-container {
+    flex-direction: column;
+    padding: 20px;
   }
-  
+
+  .credentials-card,
   .summary {
-    flex: 1 1 50%;
-    background: #f0f1f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    box-sizing: border-box;
+    max-width: 100%;
   }
-  
-  .summary .content {
-    max-width: 350px;
-    text-align: center;
-  }
-  
-  .logo {
-    width: 170px;
-    height: 70px;
-  }
-  
-  .summary h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .summary ul {
-    margin: 1rem 0;
-    padding: 0;
-    list-style: none;
-  }
-  
-  .summary ul li {
-    margin-bottom: 0.5rem;
-    color: #555;
-    font-size: 0.9rem;
-  }
-  
-  .summary .total {
-    margin-top: 1.5rem;
-  }
-  
-  .summary .total p {
-    display: flex;
-    justify-content: space-between;
+
+  .pay-button {
+    padding: 12px;
     font-size: 1rem;
-    margin-bottom: 0.5rem;
   }
-  
-  .payment-form {
-    flex: 1 1 50%;
-    background: #fff;
-    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    box-sizing: border-box;
-  }
-  
-  .payment-form .content {
-    max-width: 350px;
-    width: 100%;
-  }
-  
-  .payment-form h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .payment-form h3 {
-    margin: 1.5rem 0 1rem;
-    font-size: 1.2rem;
-    color: #333;
-  }
-  
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    color: #333;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 0.7rem;
-    font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  .form-row {
-    display: flex;
-    gap: 1rem;
-  }
-  
-  .form-row .form-group {
-    flex: 1;
-  }
-  
-  .form-row #cvv {
-    max-width: 80px;
-  }
-  
-  .terms {
-    margin: 1.5rem 0;
-    font-size: 0.85rem;
-    color: #555;
-  }
-  
-  .terms a {
-    color: #007bff;
-  }
-  
-  .submit-button {
-    background: #007bff;
-    color: white;
-    padding: 1rem;
-    width: 100%;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background: #0056b3;
-  }
-  
-  .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .spinner {
-    border: 2px solid transparent;
-    border-top: 2px solid #007bff;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
-    margin-right: 10px;
-  }
-  
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .success-message {
-    color: #28a745;
-  }
-  
-  .error-message {
-    color: #dc3545;
-  }
-  
-  @media (max-width: 768px) {
-    .payment-container {
-      flex-direction: column;
-      height: auto;
-    }
-  
-    .summary,
-    .payment-form {
-      flex: 1 1 100%;
-    }
-  
-    .form-row {
-      flex-direction: column;
-    }
-  
-    .form-row #cvv {
-      max-width: 100%;
-    }
-  }
+}
 </style>
