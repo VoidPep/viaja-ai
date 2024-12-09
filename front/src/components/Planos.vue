@@ -5,20 +5,21 @@
       <div class="plan-card mx-4">
         <div class="plan-header">
           <h2>Gratuito</h2>
-          <p class="price">0,00 R$</p>
+          <p class="price">R$ 0,00</p>
         </div>
         <p>Plano gratuito para usuários casuais</p>
         <ul>
           <li>Limite de viagens geradas</li>
           <li>Visualização das últimas viagens geradas1</li>
         </ul>
-        <Button label="Continuar com gratuito" class="p-button-outlined p-button-rounded plan-btn" @click="irParaTelaInicial"/>
+        <Button label="Continuar com gratuito" class="p-button-outlined p-button-rounded plan-btn"
+          @click="irParaTelaInicial" />
       </div>
 
       <div class="plan-card featured mx-4">
         <div class="plan-header">
-          <h2>ilimitado</h2>
-          <p class="price">5,00 R$</p>
+          <h2>Ilimitado</h2>
+          <p class="price">R$ 5,00</p>
           <span class="badge">#Recomendado</span>
         </div>
         <p>Para aqueles que realmente gostam de viajar</p>
@@ -49,7 +50,7 @@ async function irParaTelaInicial() {
 
 <style scoped>
 .plans-container {
-  background: linear-gradient(135deg, #1e1e2f, #2a2a44);
+  background: linear-gradient(135deg, #1e1e2f, #3d4b87);
   min-height: 100vh;
   color: #fff;
   text-align: center;
@@ -66,7 +67,8 @@ async function irParaTelaInicial() {
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s, box-shadow 0.3s;
-  width: 300px; /* Largura fixa para manter os cards alinhados */
+  width: 300px;
+  /* Largura fixa para manter os cards alinhados */
 }
 
 .plan-card:hover {
@@ -94,7 +96,7 @@ async function irParaTelaInicial() {
 
 .badge {
   display: inline-block;
-  background-color: #6f42c1;
+  background-color: #5271ff;
   color: #fff;
   border-radius: 16px;
   padding: 0.2rem 0.6rem;
@@ -121,8 +123,8 @@ ul li {
 }
 
 .plan-btn:hover {
-  background-color: #6f42c1;
-  border-color: #6f42c1;
+  background-color: #5271ff;
+  border-color: #5271ff;
   color: #fff;
 }
 </style>

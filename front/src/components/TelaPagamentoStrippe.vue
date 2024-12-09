@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
-import Card from "primevue/card"
 
 const stripe = ref(null);
-const cardElement = ref(null);
+const cardNumberElement = ref(null);
+const cardExpiryElement = ref(null);
+const cardCvcElement = ref(null);
 const isProcessing = ref(false);
 const errorMessage = ref("");
 
@@ -13,26 +14,63 @@ onMounted(async () => {
   stripe.value = await loadStripe("pk_test_51Q2MUS03TdZPkyxCD6Xwnv3ZLpw6MuKA4YwhzBbRNyXQ5DSgJC3OJIvuBOqLar7SZU80FvQ1RCSl9x1xBBj4dZxq009Oxs0XRd");
 
   const elements = stripe.value.elements();
-  // Adicionando estilo ao elemento do cartão
-  cardElement.value = elements.create("card", {
+
+  // Criar e montar o elemento do número do cartão
+  cardNumberElement.value = elements.create("cardNumber", {
     style: {
       base: {
-        color: "#32325d", // Cor do texto
+        color: "#32325d",
         fontFamily: "Arial, sans-serif",
-        fontSize: "16px", // Tamanho da fonte
+        fontSize: "16px",
         "::placeholder": {
-          color: "#aab7c4", // Cor do texto de placeholder
+          color: "#aab7c4",
         },
       },
       invalid: {
-        color: "#fa755a", // Cor do texto em caso de erro
-        iconColor: "#fa755a", // Cor do ícone em caso de erro
+        color: "#fa755a",
+        iconColor: "#fa755a",
       },
     },
-    hidePostalCode: false, // Opcional: oculta o campo de código postal
   });
+  cardNumberElement.value.mount("#card-number-element");
 
-  cardElement.value.mount("#card-element");
+  // Criar e montar o elemento de validade
+  cardExpiryElement.value = elements.create("cardExpiry", {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  });
+  cardExpiryElement.value.mount("#card-expiry-element");
+
+  // Criar e montar o elemento de CVC
+  cardCvcElement.value = elements.create("cardCvc", {
+    style: {
+      base: {
+        color: "#32325d",
+        fontFamily: "Arial, sans-serif",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a",
+      },
+    },
+  });
+  cardCvcElement.value.mount("#card-cvc-element");
 });
 
 // Função para processar o pagamento
@@ -55,7 +93,11 @@ const handlePayment = async () => {
     // Confirmar o pagamento
     const result = await stripe.value.confirmCardPayment(clientSecret, {
       payment_method: {
-        card: cardElement.value,
+        card: {
+          number: cardNumberElement.value,
+          expiry: cardExpiryElement.value,
+          cvc: cardCvcElement.value,
+        },
       },
     });
 
@@ -74,78 +116,74 @@ const handlePayment = async () => {
 </script>
 
 <template>
-  <div class="">
-    <!-- Lado Esquerdo -->
-    <div class="summary gap-8 h-screen">
-      <Card class="w-26rem">
-          <template #title>Credenciais</template>
-          <template #content>
-            <div class="flex flex-column">
-              <form @submit.prevent="handlePayment">
-                <!-- Div onde o elemento do cartão será montado -->
-                <div id="card-element" class="card-input"></div>
+  <div class="payment-container">
+    <!-- Credenciais (Com Card) -->
+    <div class="credentials-card">
+      <h3>Credenciais</h3>
+      <form @submit.prevent="handlePayment" class="credentials-form">
+        <div id="card-number-element" class="stripe-input"></div>
+        <div id="card-expiry-element" class="stripe-input"></div>
+        <div id="card-cvc-element" class="stripe-input"></div>
+        <button :disabled="isProcessing" class="pay-button">
+          {{ isProcessing ? "Processando..." : "Pagar" }}
+        </button>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+      </form>
+    </div>
 
-                <!-- Botão para processar o pagamento -->
-                <button :disabled="isProcessing" class="pay-button">
-                  {{ isProcessing ? "Processando..." : "Pagar" }}
-                </button>
-
-                <!-- Mensagem de erro -->
-                <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-              </form>
-            </div>
-          </template>
-      </Card>
-
-      <div class="content">
-        <img class="logo" src="@/assets/images/logo-simplificada.png" />
-        <h2>Assinatura Viaja-AI</h2>
-        <p><strong>R$49,90</strong> por mês</p>
-        <ul>
-          <li>Planejamento inteligente de viagens</li>
-          <li>Acesso a ferramentas premium</li>
-          <li>Suporte dedicado</li>
-        </ul>
-        <div class="total">
-          <p>Subtotal: <span>R$49,90</span></p>
-          <p>Taxa: <span>R$0,00</span></p>
-          <hr />
-          <p>Total hoje: <strong>R$49,90</strong></p>
-        </div>
+    <!-- Assinatura (Sem Card) -->
+    <div class="content">
+      <img class="logo" src="@/assets/images/logo-simplificada.png" />
+      <h2>Assinatura Viaja-AI</h2>
+      <p><strong>R$49,90</strong> por mês</p>
+      <ul>
+        <li>Planejamento inteligente de viagens</li>
+        <li>Acesso a ferramentas premium</li>
+        <li>Suporte dedicado</li>
+      </ul>
+      <div class="total">
+        <p>Subtotal: <span>R$49,90</span></p>
+        <p>Taxa: <span>R$0,00</span></p>
+        <hr />
+        <p>Total hoje: <strong>R$49,90</strong></p>
       </div>
     </div>
-    
-    <!-- Lado Direito -->
-    <!-- <div class="payment-form">
-      <div class="content">
-        <h2>Informações de Pagamento</h2>
-
-        <form @submit="processPayment">
-          <div v-if="isLoading" class="loading">
-            <div class="spinner"></div>
-            <p>Processando pagamento...</p>
-          </div>
-
-          <div v-else-if="paymentStatus === 'success'" class="success-message">
-            <p>🎉 Pagamento confirmado! Obrigado por assinar o Viaja-AI.</p>
-          </div>
-
-          <div v-else-if="paymentStatus === 'error'" class="error-message">
-            <p>❌ Erro ao processar o pagamento. Tente novamente.</p>
-          </div>
-
-          
-        </form>
-      </div>
-    </div> -->
   </div>
 </template>
+
+
+
 
 <style scoped>
 .payment-container {
   display: flex;
-  width: 100%;
-  height: 100vh;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px; /* Espaçamento entre as colunas */
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto; /* Centraliza o container na tela */
+}
+
+.credentials-card {
+  flex: 1;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.credentials-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.stripe-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ffffff;
 }
 
 .summary {
@@ -157,6 +195,16 @@ const handlePayment = async () => {
   padding: 1.5rem;
 }
 
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.logo {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
 .summary .content {
   max-width: 350px;
   text-align: center;
