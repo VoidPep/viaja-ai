@@ -1,8 +1,13 @@
 <template>
-  <div class="flex flex-column plans-container">
-    <h1 class="mb-4">Escolha o seu Plano</h1>
-    <div class="flex grid justify-content-center align-content-center">
-      <div class="plan-card mx-4">
+  <div class="plans-container">
+    <router-link to="/home">
+      <button class="back-button"><i class="pi pi-arrow-circle-left azul icones-hover cursor-pointer"
+        style="font-size: 1.2rem;"></i></button>
+    </router-link>
+    
+    <h1 class="title">Escolha o seu Plano</h1>
+    <div class="plans">
+      <div class="plan-card">
         <div class="plan-header">
           <h2>Gratuito</h2>
           <p class="price">R$ 0,00</p>
@@ -10,13 +15,12 @@
         <p>Plano gratuito para usuários casuais</p>
         <ul>
           <li>Limite de viagens geradas</li>
-          <li>Visualização das últimas viagens geradas1</li>
+          <li>Visualização das últimas viagens geradas</li>
         </ul>
-        <Button label="Continuar com gratuito" class="p-button-outlined p-button-rounded plan-btn"
-          @click="irParaTelaInicial" />
+        <Button label="Continuar com gratuito" class="plan-btn" @click="irParaTelaInicial" />
       </div>
 
-      <div class="plan-card featured mx-4">
+      <div class="plan-card featured">
         <div class="plan-header">
           <h2>Ilimitado</h2>
           <p class="price">R$ 5,00</p>
@@ -26,9 +30,9 @@
         <ul>
           <li>Tudo dentro do plano gratuito</li>
           <li>Número ilimitado de gerações</li>
-          <li>Pesquisa mais eficáz</li>
+          <li>Pesquisa mais eficaz</li>
         </ul>
-        <Button label="Continuar com ilimitado" class="p-button-outlined p-button-rounded plan-btn" />
+        <Button label="Continuar com ilimitado" class="plan-btn" />
       </div>
     </div>
   </div>
@@ -50,34 +54,73 @@ async function irParaTelaInicial() {
 
 <style scoped>
 .plans-container {
-  background: linear-gradient(135deg, #1e1e2f, #3d4b87);
+  background: linear-gradient(135deg, #9c9c9c, #284daa);
   min-height: 100vh;
-  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #333;
   text-align: center;
+  padding: 20px;
+  position: relative; 
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #efefef;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.back-button:hover {
+  background-color: #0062cc;
 }
 
 .plans {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
   max-width: 1200px;
+  margin: auto;
 }
 
 .plan-card {
-  background-color: #2c2c3e;
-  border-radius: 12px;
+  background-color: #ffffff;
+  border-radius: 15px;
   padding: 2rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display:flex;
+  flex-direction: column;
+  justify-content: space-around;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
-  width: 300px;
-  /* Largura fixa para manter os cards alinhados */
+  width: 280px;
+  margin: 10px;
 }
 
 .plan-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .featured {
-  border: 2px solid #6f42c1;
+  border: 2px solid #007bff;
 }
 
 .plan-header {
@@ -87,11 +130,13 @@ async function irParaTelaInicial() {
 .plan-header h2 {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
+  color: #007bff;
 }
 
 .price {
   font-size: 2.5rem;
   font-weight: bold;
+  color: #333;
 }
 
 .badge {
@@ -110,6 +155,7 @@ ul {
   margin: 1.5rem 0;
   font-size: 0.9rem;
   text-align: left;
+  color: #555;
 }
 
 ul li {
@@ -118,13 +164,37 @@ ul li {
 
 .plan-btn {
   margin-top: 1.5rem;
-  color: #fff;
-  border: 1px solid #fff;
+  color: #007bff;
+  border: 1px solid #007bff;
+  background-color: #ffffff;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .plan-btn:hover {
-  background-color: #5271ff;
-  border-color: #5271ff;
+  background-color: #007bff;
   color: #fff;
+}
+
+@media (max-width: 768px) {
+  .plans {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plan-card {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .price {
+    font-size: 2rem;
+  }
+
+  .plan-btn {
+    width: 100%;
+  }
 }
 </style>
