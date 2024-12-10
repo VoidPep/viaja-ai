@@ -61,14 +61,21 @@ export class RoteirosService {
     return await this.roteiroRepository.save(roteiro)
   }
   async remove(id: number) {
-    return await this.roteiroRepository.delete(id)
+    const roteiro = await this.roteiroRepository.findOne({ where: { id }, relations: ['imagens'] });
+
+    if (!roteiro) {
+        throw new Error('Roteiro não encontrado');
+    }
+
+    this.imagemRepository.remove(roteiro.imagens)
+    return await this.roteiroRepository.remove(roteiro);
   }
 
   async salvarRoteiro(viagem: any, user: Usuario) {
     const viagensDoBanco = await Promise.all(
       viagem.imagens.map(async imagem => {
         const novaImagem = this.imagemRepository.create({ url: imagem.url });
-        return await this.imagemRepository.save(novaImagem); // Persistir as imagens
+        return await this.imagemRepository.save(novaImagem);
       })
     );
   
@@ -82,8 +89,8 @@ export class RoteirosService {
       imagens: viagensDoBanco,
     });
   
-    const roteiroCriado = await this.roteiroRepository.save(roteiro); // Persistir o roteiro
+    const roteiroCriado = await this.roteiroRepository.save(roteiro);
   
-    return { id: roteiroCriado.id }; // Retornar o ID do roteiro criado
+    return { id: roteiroCriado.id };
   }
 }

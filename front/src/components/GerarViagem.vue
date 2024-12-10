@@ -8,6 +8,8 @@ import Slider from "primevue/slider";
 import Calendar from 'primevue/calendar';
 import { useRouter } from 'vue-router';
 import http from '@/http/http';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css'; 
 
 const {
   setLoading,
@@ -466,6 +468,25 @@ const selecionarViagemGerada = async function(viagem) {
   
       <p>Custo total estimado: <strong>{{ formatCurrency(viagemSelecionada.custo_total_estimado) }}</strong></p>
   
+      <div class="flex justify-content-center">
+          <Swiper
+          :slidesPerView="1" 
+          :spaceBetween="50" 
+          loop
+          autoplay
+          @swiper="onSwiper" 
+          @slideChange="onSlideChange"
+          :navigation="{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          }"
+        >
+          <SwiperSlide v-for="imagem in viagemSelecionada.imagens">
+              <img :src="imagem.url" height="500" alt="Card Viagem">
+          </SwiperSlide>
+        </Swiper>
+        </div>
+
       <h3>Atividades Recomendadas</h3>
       <ul>
         <li v-for="(atividade, index) in viagemSelecionada.conteudo.atividades_recomendadas" :key="index">
@@ -514,6 +535,8 @@ const selecionarViagemGerada = async function(viagem) {
 </template>
 
 <style scoped>
+@import url('https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css');
+
 .selected-answer {
   background-color: rgba(23, 32, 215, 0);
   font-weight: bold;
