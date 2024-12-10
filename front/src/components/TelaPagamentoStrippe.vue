@@ -79,7 +79,7 @@ const handlePayment = async () => {
 
   try {
     // Chamar o back-end para criar o PaymentIntent
-    const response = await fetch("/api/create-payment-intent", {
+    const response = await fetch("http://localhost:3000/stripe/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -101,18 +101,22 @@ const handlePayment = async () => {
       },
     });
 
-    if (result.error) {
-      // Exibir erros
+  if (result.error) {
+      // Exibir erros no console ou para o usuário
+      console.error("Erro no pagamento:", result.error.message);
       errorMessage.value = result.error.message;
     } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
+      // Pagamento foi concluído com sucesso
       alert("Pagamento realizado com sucesso!");
     }
   } catch (error) {
+    // Erro genérico ao processar a requisição
+    console.error("Erro ao processar o pagamento:", error);
     errorMessage.value = "Erro ao processar o pagamento.";
   } finally {
     isProcessing.value = false;
   }
-};
+}
 </script>
 
 <template>

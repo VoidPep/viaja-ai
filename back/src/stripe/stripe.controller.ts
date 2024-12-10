@@ -11,8 +11,10 @@ export class StripeController {
   }
   
   @Post('create-payment-intent')
-  async createPaymentIntent(@Body() body: { userId: number; priceId: string }) {
-    const { userId: idUsuario, priceId } = body;
-    return await this.stripeService.createPaymentIntent(idUsuario, priceId);
+  async createPaymentIntent(@Body() body: { idUsuario: number; priceId: string }) {
+    console.log('Body recebido no controller:', body);
+    const result = await this.stripeService.createPaymentIntent(body.idUsuario, body.priceId);
+    console.log('Resultado da StripeService:', result);
+    return result;
   }
 }
