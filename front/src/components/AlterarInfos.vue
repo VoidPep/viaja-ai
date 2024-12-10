@@ -10,14 +10,14 @@
 
                         <div class="form-group">
                             <label for="name">Nome</label>
-                            <input id="name" type="text" v-model="form.name" readonly />
+                            <input id="name" type="text" v-model="form.name" />
                         </div>
 
 
                         <div class="form-group">
                             <label for="email">E-mail</label>
                             <input id="email" type="email" v-model="form.email"
-                                :class="{ 'is-invalid': errors.email }" />
+                                :class="{ 'is-invalid': errors.email }" readonly/>
                             <span v-if="errors.email" class="error">{{ errors.email }}</span>
                         </div>
                     </div>
@@ -60,8 +60,8 @@ export default {
     name: "EditUserCard",
     setup() {
         const form = ref({
-            name: "Sérgio",
-            email: "sergio@example.com",
+            name: "",
+            email: "",
             oldPassword: "",
             newPassword: "",
             confirmPassword: "",

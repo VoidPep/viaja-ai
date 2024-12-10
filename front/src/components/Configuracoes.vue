@@ -1,42 +1,44 @@
 <script setup>
 import AlterarInfo from "./AlterarInfos.vue"
 
+import { onMounted, ref } from 'vue';
 
-</script>
-<template>
-    <div class="sidebar" :class="{ 'is-collapsed': isCollapsed }">
-        <nav v-if="!isCollapsed">
-            <ul>
-                <li v-for="item in menuItems" :key="item.text">
-                    <a :href="item.link">{{ item.text }}</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-</template>
+const isCollapsed = ref(false);
 
-<script>
-export default {
-    data() {
-        return {
-            isCollapsed: false,
-            menuItems: [
-                { text: "Perfil", link: "/" },
-                { text: "Pagamentos", link: "/Pagamentos" },
-                { text: "Gerenciar Planos", link: "/Gerenciar" },
-            ],
-        };
-    },
-    methods: {
-        toggleSidebar() {
-            this.isCollapsed = !this.isCollapsed;
-        },
-    },
+const menuItems = ref([]);
+const selecionado = ref({})
+
+const toggleSidebar = () => {
+    isCollapsed.value = !isCollapsed.value;
 };
 
-<AlterarInfo></AlterarInfo>
+onMounted(() => {
+    menuItems.value = [
+        { text: "Perfil" },
+        { text: "Pagamentos" },
+        { text: "Gerenciar Planos" },
+    ]
 
+    selecionado.value = menuItems.value[0]
+})
 </script>
+<template>
+    <div class="flex">
+        <div class="sidebar" :class="{ 'is-collapsed': isCollapsed }">
+            <nav v-if="!isCollapsed">
+                <ul>
+                    <li v-for="item in menuItems" :key="item.text">
+                        <a @click="selecionado = item" href="javascript:">{{ item.text }}</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="w-full">
+            <AlterarInfo v-show="selecionado === menuItems[0]"></AlterarInfo>
+        </div>
+    </div>
+</template>
 
 <style scoped>
 .sidebar {
