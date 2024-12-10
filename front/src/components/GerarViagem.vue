@@ -8,6 +8,8 @@ import Slider from "primevue/slider";
 import Calendar from 'primevue/calendar';
 import { useRouter } from 'vue-router';
 import http from '@/http/http';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css'; 
 
 const {
   setLoading,
@@ -43,7 +45,6 @@ const sair = function () {
 
 const showDialog = ref(false);
 const confirmAction = () => {
-  console.log('Ação confirmada');
   showDialog.value = false;
 };
 
@@ -112,7 +113,6 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
     const response = await http.post('roteiros/gerar-viagem', form)
     
     if(response.data && response.data.viagens) {
-      console.log(response.data)
       
       viagensGeradas.value = []
       response.data.viagens.forEach(viagem => {
@@ -125,10 +125,10 @@ if(currentQuestionIndex.value === perguntas.value.length - 1) {
           dataFim: dataFim,
           dataInicio: dataInicio,
           destino: viagem.destino,
-          imanges: viagem.imagens,
-          conteudo: JSON.parse(viagem.json)
+          imagens: viagem.imagens,
+          conteudo: JSON.parse(viagem.json),
+          original: viagem
         }
-        console.log(novo)
         
         viagensGeradas.value.push(novo)
         
@@ -281,6 +281,26 @@ function abrirDialogViagemGerada(viagemParaVisualizar) {
 
 const dialogVisualizarViagem = ref(false)
 const viagemSelecionada = ref(null)
+
+const visualizarViagemGerada = function(viagem) {
+  if(!viagem) return;
+
+  viagemSelecionada.value = viagem
+  dialogVisualizarViagem.value = true
+}
+
+const selecionarViagemGerada = async function(viagem) {
+  viagensGeradasDoUsuario.value.push(viagem)
+  dialogDeOpcoesDeViagem.value = false
+
+  const usuario = JSON.parse(localStorage.getItem('user'))
+  const idUsuario = usuario.id
+  
+  await http.post(`roteiros/salvar-roteiro`, {
+    idUsuario,
+    viagem: {...viagem.original, imagens: viagem.imagens}
+  })
+}
 </script>
 
 <template>
@@ -448,6 +468,25 @@ const viagemSelecionada = ref(null)
   
       <p>Custo total estimado: <strong>{{ formatCurrency(viagemSelecionada.custo_total_estimado) }}</strong></p>
   
+      <div class="flex justify-content-center">
+          <Swiper
+          :slidesPerView="1" 
+          :spaceBetween="50" 
+          loop
+          autoplay
+          @swiper="onSwiper" 
+          @slideChange="onSlideChange"
+          :navigation="{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          }"
+        >
+          <SwiperSlide v-for="imagem in viagemSelecionada.imagens">
+              <img :src="imagem.url" height="500" alt="Card Viagem">
+          </SwiperSlide>
+        </Swiper>
+        </div>
+
       <h3>Atividades Recomendadas</h3>
       <ul>
         <li v-for="(atividade, index) in viagemSelecionada.conteudo.atividades_recomendadas" :key="index">
@@ -485,10 +524,10 @@ const viagemSelecionada = ref(null)
   </Dialog>
   
   <div>
-    <Dialog v-model:visible="dialogDeOpcoesDeViagem" modal header="Visualizar viagem gerada" :style="{ width: '80rem' }">
-      <div class="flex">
+    <Dialog v-model:visible="dialogDeOpcoesDeViagem" modal :style="{ width: '80rem' }" class="card-principal">
+      <div class="flex gap-2">
         <div v-for="viagem in viagensGeradas">
-          <ViagemGerada :viagem="viagem"></ViagemGerada>
+          <ViagemGerada @selecionarViagem="selecionarViagemGerada(viagem)" @visualizar-viagem="visualizarViagemGerada(viagem)" :viagens-geradas="viagensGeradas" :viagem="viagem"></ViagemGerada>
         </div>
       </div>
     </Dialog>
@@ -496,6 +535,8 @@ const viagemSelecionada = ref(null)
 </template>
 
 <style scoped>
+@import url('https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css');
+
 .selected-answer {
   background-color: rgba(23, 32, 215, 0);
   font-weight: bold;
@@ -769,4 +810,13 @@ const viagemSelecionada = ref(null)
   border: 1px solid #3d4b87;
 }
 
+</style>
+<style>
+.card-principal .p-dialog-header {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.card-principal .p-dialog-content {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
 </style>

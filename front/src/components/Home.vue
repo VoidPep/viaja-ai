@@ -18,7 +18,7 @@ import 'swiper/css';
           Escolha seu destino, veja opções incríveis dentro do seu orçamento e aproveite cada momento sem complicações.
         </p>
         <div class="btn-test">
-          <span>Teste agora</span>
+          <router-link to="/planos" style="text-decoration: none; color: #333; font-weight: bold;">Teste agora</router-link>
         </div>
       </div>
 
@@ -37,13 +37,19 @@ import 'swiper/css';
           }"
         >
           <SwiperSlide>
-            <div class="card"></div>
+            <div class="card">
+              <img src="@/assets/images/card1home.png" alt="Card Viagem">
+            </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div class="card"></div>
+            <div class="card">
+              <img src="@/assets/images/card2home.png" alt="Card Viagem">
+            </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div class="card"></div>
+            <div class="card">
+              <img src="@/assets/images/card3home.png" alt="Card Viagem">
+            </div>
           </SwiperSlide>
         </Swiper>
         
@@ -142,10 +148,12 @@ import 'swiper/css';
 
   .card {
     margin: 0 auto;
-    width: 300px;
-    height: 400px;
-    border-radius: 13px;
-    background-color: #000;
+    display:flex;
+    justify-content: center;
+  }
+
+  .card img {
+    border-radius: 12px;
   }
 
   .main-card-area {

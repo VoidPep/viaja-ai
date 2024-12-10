@@ -21,8 +21,7 @@ export class RoteirosController {
     const prompt = promptGemini(request)
   
     const viagensGeradas = await this.geminiService.getResponse(prompt);
-    // const {senha, ...usuario} = await this.userService.findOne(request.idUsuario)
-
+    
     let roteiros = viagensGeradas.map(viagemGerada => {
       let roteiro = {
         dataInicio: viagemGerada.data_inicio,
@@ -41,10 +40,10 @@ export class RoteirosController {
       const { usuario, ...roteiroSemUsuario } = roteiro;
       return roteiroSemUsuario;
     });
-
+    
     return { viagens: roteirosSanitizados };
   }
-
+  
   @Get("getByLoggedUser/:id")
   getByLoggedUser(@Param('id') id) {
     return this.roteirosService.getByLoggedUser(id);
@@ -53,5 +52,12 @@ export class RoteirosController {
   @Delete(":id")
   delete(@Param('id') id) {
     return this.roteirosService.remove(id);
+  }
+  
+  @Post("salvar-roteiro")
+  async salvarRoteiro(@Body() body: { idUsuario: number, viagem: any }) {
+    const usuario = await this.userService.findOne(body.idUsuario)
+
+    return this.roteirosService.salvarRoteiro(body.viagem, usuario);
   }
 }
