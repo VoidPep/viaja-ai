@@ -9,7 +9,7 @@
       </div>
       <nav class="nav-buttons">
         <a href="#sobre" class="text-button">Sobre</a>
-        <router-link to="/assinaturas" class="text-button">Assinaturas</router-link>
+        <router-link to="/planos" class="text-button">Assinaturas</router-link>
         <router-link to="/login" class="styled-button">Login</router-link>
       </nav>
     </header>

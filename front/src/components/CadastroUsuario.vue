@@ -115,8 +115,6 @@ onMounted(() => {
                 <img :src="viajaAiLogoPath" alt="Logo viaja ai" class="logo" />
                 <form @submit.prevent="entrar" method="post">
                   <div class="flex flex-column gap-2 mt-8">
-
-
                     <label for="email">Email</label>
                     <InputText v-model="login.email" type="email" id="email" class="w-100" required></InputText>
                     <label for="senha">Senha</label>
@@ -128,7 +126,7 @@ onMounted(() => {
                         <label for="lembrarDeMim" class="ml-2">Lembrar de mim</label>
                       </div>
                       <div>
-                        <a @click="redirectToRegister()" class="text-white" href="javascript:">Registrar</a>
+                        <span style="color: white;padding-right: 8px;">Ainda não tem uma conta?</span><a @click="redirectToRegister()" class="text-white" href="javascript:">Registrar-se</a>
                       </div>
                     </div>
                     <Button type="submit" label="Login"></Button>
@@ -164,7 +162,27 @@ onMounted(() => {
       </div>
 
       <div class="col-6">
+        <div class="info-area">
+          <h3 class="info-title">Explore o mundo com inteligência!</h3>
+          <p class="info-description">O Viaja Ai usa o poder da inteligência artificial para criar viagens personalizadas para você. Sem mais complicação, sem estresse. Só diversão e experiências únicas! 🌍</p>
 
+          <div class="info-cards-container">
+            <div class="info-card">
+              <i class="pi pi-search text-3xl mr-3"></i>
+              <div>
+                <h4 class="info-card-title">Encontre destinos incríveis</h4>
+                <p class="info-card-description">Encontre destinos baseados no seu estilo e preferências.</p>
+              </div>
+            </div>
+            <div class="info-card">
+              <i class="pi pi-dollar text-3xl mr-3"></i>
+              <div>
+                <h4 class="info-card-title">Descubra ofertas exclusivas</h4>
+                <p class="info-card-description">Encontre ofertas que se encaixam no seu orçamento.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -180,10 +198,10 @@ onMounted(() => {
 
 .background-image {
   background-image: url("@/assets/images/background-montanha-azul.png");
-  min-height: 100vh;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: bottom;
+  background-position: center; /* Centraliza o background */
+  min-height: 100vh;
 }
 
 .card-shadow {
@@ -191,7 +209,7 @@ onMounted(() => {
 }
 
 .p-5rem {
-  padding: 5rem 6rem 0 6rem !important
+  padding: 5rem 6rem 0 6rem !important;
 }
 
 label {
@@ -206,7 +224,84 @@ label {
 
 .fade-enter,
 .fade-leave-to {
-  transition: opacity 0.8s ease;
   opacity: 0;
 }
+
+.info-area {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+}
+
+.info-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.info-description {
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 1.2rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.info-cards-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+  margin: 0.5rem;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.info-card-title {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.info-card-description {
+  color: white;
+  font-size: 1rem;
+}
+
+.text-3xl {
+  font-size: 2rem;
+}
+
+.mr-3 {
+  margin-right: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 1300px) {
+  .info-area {
+    display:none;
+  }
+}
 </style>
+
