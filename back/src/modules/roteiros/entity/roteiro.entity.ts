@@ -26,6 +26,6 @@ export class Roteiro {
     @JoinColumn({ name: 'idUsuario' })
     usuario: Usuario;
 
-    @OneToMany(() => ImagemDoRoteiro, (imagem) => imagem.roteiro, { cascade: true })
+    @OneToMany(() => ImagemDoRoteiro, (imagem) => imagem.roteiro, { cascade: true, onDelete: 'CASCADE' })
     imagens: ImagemDoRoteiro[];
 }
