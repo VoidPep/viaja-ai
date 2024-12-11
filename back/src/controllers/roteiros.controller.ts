@@ -45,8 +45,8 @@ export class RoteirosController {
   }
   
   @Get("getByLoggedUser/:id")
-  getByLoggedUser(@Param('id') id) {
-    return this.roteirosService.getByLoggedUser(id);
+  async getByLoggedUser(@Param('id') id) {
+    return await this.roteirosService.getByLoggedUser(id);
   }
   
   @Delete(":id")
