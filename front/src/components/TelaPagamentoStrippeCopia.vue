@@ -9,7 +9,6 @@ const cardElement = ref(null);
 const isProcessing = ref(false);
 const errorMessage = ref("");
 const router = useRouter();
-const addressFilled = ref(false); // Verifica se o campo de endereço foi preenchido
 
 // Inicializar Stripe e os elementos do cartão
 onMounted(async () => {
@@ -69,11 +68,6 @@ const handlePayment = async () => {
     isProcessing.value = false;
   }
 };
-
-// Função para detectar preenchimento do endereço
-const onAddressInput = () => {
-  addressFilled.value = true;
-};
 </script>
 
 <template>
@@ -87,62 +81,7 @@ const onAddressInput = () => {
         <template #title>Pagamento Seguro<br> - <span style="font-size: 1.2rem;">Cartão de crédito</span></template>
         <template #content>
           <form @submit.prevent="handlePayment">
-            <input class="input-cartao" type="text" placeholder="Cardholder name"></input>
             <div id="card-element" class="card-input"></div>
-
-            <select class="input-cartao" placeholder="Select country">
-              <option value="br" selected>Brazil</option>
-              <option value="us">United States</option>
-              <option value="ca">Canada</option>
-              <option value="uk">United Kingdom</option>
-              <option value="de">Germany</option>
-              <option value="fr">France</option>
-              <option value="it">Italy</option>
-              <option value="es">Spain</option>
-              <option value="au">Australia</option>
-              <option value="jp">Japan</option>
-              <option value="cn">China</option>
-              <option value="in">India</option>
-              <option value="mx">Mexico</option>
-              <option value="ar">Argentina</option>
-              <option value="br">Brazil</option>
-              <option value="ru">Russia</option>
-              <option value="sa">Saudi Arabia</option>
-              <option value="kr">South Korea</option>
-              <option value="ng">Nigeria</option>
-              <option value="za">South Africa</option>
-              <option value="eg">Egypt</option>
-              <option value="ng">Nigeria</option>
-              <option value="se">Sweden</option>
-              <option value="no">Norway</option>
-              <option value="dk">Denmark</option>
-              <option value="fi">Finland</option>
-              <option value="nl">Netherlands</option>
-              <option value="be">Belgium</option>
-              <option value="pl">Poland</option>
-              <option value="ch">Switzerland</option>
-              <option value="at">Austria</option>
-              <option value="cz">Czech Republic</option>
-              <option value="pt">Portugal</option>
-              <option value="tr">Turkey</option>
-              <option value="kr">South Korea</option>
-              <option value="ph">Philippines</option>
-              <option value="id">Indonesia</option>
-              <option value="th">Thailand</option>
-              <option value="vn">Vietnam</option>
-              <option value="my">Malaysia</option>
-              <option value="sg">Singapore</option>
-              <option value="cl">Chile</option>
-            </select>
-            <input class="input-cartao" type="text" placeholder="Billing address" @input="onAddressInput"></input>
-            
-            <div v-if="addressFilled">
-              <input class="input-cartao" type="text" placeholder="Neighborhood"></input>
-              <input class="input-cartao" type="text" placeholder="City"></input>
-              <input class="input-cartao" type="text" placeholder="State"></input>
-              <input class="input-cartao" type="text" placeholder="Postal code"></input>
-            </div>
-
             <button :disabled="isProcessing" class="pay-button">
               {{ isProcessing ? "Processando..." : "Confirmar pagamento: R$5,00" }}
             </button>
@@ -166,32 +105,11 @@ const onAddressInput = () => {
         <hr />
         <p>Total: <strong>R$5,00</strong></p>
       </div>
-      <div class="terms-container">
-        <router-link class="terms-link" to="/termos-de-servico">Aceito os <span class="terms-text">termos de serviço</span></router-link>
-      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.input-cartao{
-  outline: none;
-    border: 1px solid #ccc;
-    padding: 0.8rem;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    background: #f7f7f7;
-    width: 100%;
-    font-size: 16px;
-}
-
-.input-cartao::placeholder {
-  font-weight: 500;
-    color: #32325d5f;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-}
-
 .payment-container {
   display: flex;
   flex-wrap: wrap;
@@ -320,23 +238,5 @@ li {
   font-size: 0.9rem;
   text-align: center;
   margin-top: 0.5rem;
-}
-
-.terms-container {
-  margin-top: 1rem;
-}
-
-.terms-link {
-  color: #007bff;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.terms-link .terms-text {
-  text-decoration: underline;
-}
-
-.terms-link:hover {
-  color: #0056b3;
 }
 </style>

@@ -14,6 +14,7 @@
         <h4>Contato</h4>
         <ul>
           <li><a href="mailto:viajaai@gmail.com">viajaai@gmail.com</a></li>
+          <li><a href="mailto:suporteviajaai@gmail.com">suporteviajaai@gmail.com</a></li>
         </ul>
       </div>
       
