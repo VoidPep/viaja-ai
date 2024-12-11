@@ -131,6 +131,8 @@ import 'swiper/css';
     padding: 1.2rem;
     display: flex;
     flex-direction: column;
+    align-items: space-around;
+    justify-content: space-around;
     width: 60%;
   }
 
@@ -142,7 +144,7 @@ import 'swiper/css';
 
   .overlay-text {
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
   }
 
@@ -208,6 +210,7 @@ import 'swiper/css';
    .info-container {
     display: flex;
     justify-content: space-between;
+    align-items: space-around;
     margin-top: 3rem;
     padding: 2rem;
     background-color: #f4f4f4; 
