@@ -37,9 +37,9 @@ const routes = [
     path: '/logout',
     name: 'logout',
     beforeEnter: async (to, from, next) => {
-        localStorage.removeItem('user');
+      localStorage.removeItem('user');
 
-        next('/login');
+      next('/login');
     },
     allowAnnonymous: true
   },
@@ -65,22 +65,23 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//    const user = localStorage.getItem("user");
+function validar(user, to) {
+  if (to.path === "/home")
+    return null
 
-//    const validate = validate(user, to)
-  
-//    next();
-//  })
+  if (!user && to.path != '/login' && !to.allowAnnonymous)
+    return "/login"
 
-//  function validate() {
-//    if(to.path === "/home")
-//      return null
+  return null
+}
 
-//    if (!user && to.path != '/login' && !to.allowAnnonymous)
-//      return "/login"
+router.beforeEach((to, from, next) => {
+  const user = localStorage.getItem("user");
 
-//    return null
-//  }
+  const validate = validar(user, to)
+
+  next(validate);
+})
+
 
 export default router

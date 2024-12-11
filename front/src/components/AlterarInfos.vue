@@ -47,7 +47,7 @@
   </template>
   
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const form = ref({
   name: '',
@@ -56,6 +56,12 @@ const form = ref({
   newPassword: '',
   confirmPassword: '',
 });
+
+onMounted(() =>  {
+  const usuario = JSON.parse(localStorage.getItem('user'))
+  form.value.email = usuario.email
+  form.value.name = usuario.email.split('@')[0]
+})
 
 const errors = ref({});
 
