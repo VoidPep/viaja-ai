@@ -91,7 +91,7 @@ const onAddressInput = () => {
             <div id="card-element" class="card-input"></div>
 
             <select class="input-cartao" placeholder="Select country">
-              <option value="br" disabled selected>Brazil</option>
+              <option value="br" selected>Brazil</option>
               <option value="us">United States</option>
               <option value="ca">Canada</option>
               <option value="uk">United Kingdom</option>
