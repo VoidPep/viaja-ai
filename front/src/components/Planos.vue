@@ -15,24 +15,24 @@
         <p>Plano gratuito para usuários casuais</p>
         <ul>
           <li>Limite de viagens geradas</li>
-          <li>Visualização das últimas viagens geradas</li>
+          <li>Visualização das 5 últimas viagens geradas</li>
         </ul>
-        <Button label="Continuar com gratuito" class="plan-btn" @click="irParaTelaInicial" />
+        <router-link to="/" class="plan-btn">Continuar com o gratuito</router-link>
       </div>
 
       <div class="plan-card featured">
         <div class="plan-header">
           <h2>Ilimitado</h2>
-          <p class="price">R$ 5,00</p>
+          <p class="price">R$ 5,00<span style="font-size: 1.2rem;">/mês</span></p>
           <span class="badge">#Recomendado</span>
         </div>
         <p>Para aqueles que realmente gostam de viajar</p>
         <ul>
-          <li>Tudo dentro do plano gratuito</li>
+          <li>Visualização ilimitada dass viagens geradas</li>
           <li>Número ilimitado de gerações</li>
           <li>Pesquisa mais eficaz</li>
         </ul>
-        <Button label="Continuar com ilimitado" class="plan-btn" />
+        <router-link to="/pagamento" class="plan-btn">Continuar com o ilimitado</router-link>
       </div>
     </div>
   </div>
@@ -163,6 +163,7 @@ ul li {
 }
 
 .plan-btn {
+  text-decoration: none;
   margin-top: 1.5rem;
   color: #007bff;
   border: 1px solid #007bff;

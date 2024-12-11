@@ -7,7 +7,7 @@
     <Header/>
     <div class="terms-container">
       <div class="content">
-        <h1>Termos de Uso</h1>
+        <h1>Termos de Serviço</h1>
   
         <p>Bem-vindo ao Viaja-AI! Estes Termos de Uso regem o acesso e o uso da nossa plataforma, incluindo o site e aplicativos relacionados. Ao utilizar o Viaja-AI, você concorda com os termos estabelecidos abaixo. Caso não concorde, pedimos que não utilize nossos serviços.</p>
   
