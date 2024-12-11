@@ -74,7 +74,7 @@ export class AuthService {
 
             return {
                 access_token: jwt,
-                id: usuario.data ? usuario.data.id : null
+                id: usuario.data
             };
         } catch (e) {
             throw new HttpException(e, HttpStatus.BAD_REQUEST);

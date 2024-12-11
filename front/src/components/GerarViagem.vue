@@ -313,6 +313,11 @@ const selecionarViagemGerada = async function(viagem) {
         </div>
         <div class="flex flex-column mt-4">
           <img class="logo-viajaai mb-3" src="@/assets/images/logo-simplificada.png" alt="Logo viaja ai">
+
+          <div style="border-top: 1px solid #aaa;"></div>
+
+          <h3 class="px-3" style="color: #333;">Histórico de viagens</h3>
+
           <div class="historico-viagem flex flex-column p-1" aria-label="Histórico de viagens geradas">
             <div class="scrollable-container">
               <div v-for="viagem in viagensGeradasDoUsuario" :key="viagem.id" :class="{'item-fixado': viagem.fixado}"
@@ -356,6 +361,7 @@ const selecionarViagemGerada = async function(viagem) {
               </div>
             </div>
           </div>
+
         </div>
       </div>
       <i v-if="!sidebarVisible" class="pi pi-arrow-circle-right azul icones-hover cursor-pointer" @click="toggleSidebar()"
@@ -724,6 +730,8 @@ const selecionarViagemGerada = async function(viagem) {
   background-color: #f2f4f3;
   border-radius: 10px;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  font-size: 1.4rem;
+  text-align: center;
 }
 
 .chat-card-resposta span {

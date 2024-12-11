@@ -77,7 +77,9 @@ const cadastrar = async function () {
     }
     
     if (response.data.access_token) {
+      
       localStorage.setItem("user", JSON.stringify({
+        id: response.data.id,
         token: response.data.access_token,
         email: cadastro.value.email
       }));
