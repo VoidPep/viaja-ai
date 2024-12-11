@@ -46,54 +46,47 @@
     </div>
   </template>
   
-  <script>
-  import { ref } from "vue";
+<script setup>
+import { ref } from 'vue';
+
+const form = ref({
+  name: '',
+  email: '',
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+});
+
+const errors = ref({});
+
+const validateForm = () => {
+  errors.value = {};
+  if (!form.value.email) {
+    errors.value.email = 'O e-mail é obrigatório.';
+  } else if (!/\S+@\S+\.\S+/.test(form.value.email)) {
+    errors.value.email = 'E-mail inválido.';
+  }
+  if (!form.value.oldPassword) {
+    errors.value.oldPassword = 'A senha antiga é obrigatória.';
+  }
+  if (!form.value.newPassword) {
+    errors.value.newPassword = 'A nova senha é obrigatória.';
+  }
+  if (form.value.newPassword !== form.value.confirmPassword) {
+    errors.value.confirmPassword = 'As senhas não correspondem.';
+  }
+  return Object.keys(errors.value).length === 0;
+};
+
+const updateUser  = () => {
+  if (validateForm()) {
+    console.log('Informações salvas:', form.value);
+    alert('Informações atualizadas com sucesso!');
+  }
+};
+</script>
   
-  export default {
-      name: "EditUserCard",
-      setup() {
-          const form = ref({
-              name: "",
-              email: "",
-              oldPassword: "",
-              newPassword: "",
-              confirmPassword: "",
-          });
-  
-          const errors = ref({});
-  
-          const validateForm = () => {
-              errors.value = {};
-              if (!form.value.email) {
-                  errors.value.email = "O e-mail é obrigatório.";
-              } else if (!/\S+@\S+\.\S+/.test(form.value.email)) {
-                  errors.value.email = "E-mail inválido.";
-              }
-              if (!form.value.oldPassword) {
-                  errors.value.oldPassword = "A senha antiga é obrigatória.";
-              }
-              if (!form.value.newPassword) {
-                  errors.value.newPassword = "A nova senha é obrigatória.";
-              }
-              if (form.value.newPassword !== form.value.confirmPassword) {
-                  errors.value.confirmPassword = "As senhas não correspondem.";
-              }
-              return Object.keys(errors.value).length === 0;
-          };
-  
-          const updateUser = () => {
-              if (validateForm()) {
-                  console.log("Informações salvas:", form.value);
-                  alert("Informações atualizadas com sucesso!");
-              }
-          };
-  
-          return { form, errors, updateUser };
-      },
-  };
-  </script>
-  
-  <style scoped>
+<style scoped>
   .container {
     display: flex;
     align-items: center;
@@ -206,5 +199,5 @@
     padding: 16px;
     box-sizing: border-box;
   }
-  </style>
+</style>
   

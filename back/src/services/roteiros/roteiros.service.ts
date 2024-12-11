@@ -28,21 +28,22 @@ export class RoteirosService {
       const { response } = await api.search.getPhotos({
         query: `
         ${roteiro.destino} 
-        ${request.preferencias.join(', ').replace('_', ' ').toLowerCase()}
+        ${request.preferencias.join(', ').replace('_', ' ').toLowerCase()}  
         `,
         orientation: 'landscape',
-        lang: Language.Portuguese,
-        perPage: 3
+        lang: Language.Portuguese
       })
-      
-      let links = response.results.map(r => r.urls.raw)
-      links.forEach(async link => {
+
+      const randomIndexes = this.getRandomIndexes(response.results);
+
+      let links = response.results.map(r => r.urls.raw);
+      randomIndexes.forEach(i => {
         const imagem = {
-          url: link
-        }
-        
-        roteiro.imagens.push(imagem)
-      })
+          url: links[i]
+        };
+      
+        roteiro.imagens.push(imagem);
+      });
     }
     
     return roteiros
@@ -92,5 +93,19 @@ export class RoteirosService {
     const roteiroCriado = await this.roteiroRepository.save(roteiro);
   
     return { id: roteiroCriado.id };
+  }
+
+  getRandomIndexes(results: any[]): number[] {
+    // Gera um array de índices de 0 até results.length - 1
+    const indexes = Array.from({ length: results.length }, (_, i) => i);
+  
+    // Embaralha os índices
+    for (let i = indexes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+    }
+  
+    // Retorna os três primeiros índices embaralhados
+    return indexes.slice(0, 3);
   }
 }

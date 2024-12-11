@@ -431,7 +431,7 @@ const selecionarViagemGerada = async function(viagem) {
           <div v-if="perguntas[currentQuestionIndex].tipo === 'RANGE'" class="p-fluid">
             <div class="gap-2 flex flex-column p-m-3">
               <InputText v-model.number="rangeValue" class="p-mb-3"/>
-              <Slider v-model="rangeValue" :min="0" :max="10000" class="p-mt-3"/>
+              <Slider v-model="rangeValue" :min="0" :max="100000" class="p-mt-3"/>
             </div>
           </div>
         </div>
